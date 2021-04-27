@@ -13,9 +13,9 @@ using Unity.MLAgents.Actuators;
  *  a designated landing pad using Thrust Vector Control (TVC).
  *
  *  TODO:
- *      - Create a different version with fuel limits.
- *      - Create a sifferent version with fins and thruster controller.
- *      - Create a different version with deployable landing legs.
+ *      - Create a different version with fuel limits (no unlimited thrust).
+ *      - Create a different version with fins (air drag) and TVC.
+ *      - Create a different version with fins, TVC & deployable landing legs.
  *
  *  Authored By Ryan Maugin (@ryanmaugv1)
  */
@@ -56,13 +56,13 @@ public class SN11Agent : Agent
      *  Collect Environment & Agent Sensor Observations
      *
      *  The observations we gather from the environment and agent are:
-     *      1) Agent's relative position to landing pad (x, y, z).
-     *      2) Agent's relative rotation to landing pad (x, y, z).
-     *      3) Agent's velocity (x, y, z).
-     *      4) Agent's distance to the ground (y in metres).
-     *      5) Agent's angular momentum (x, y, z).
-     *      6) Agent's thrust vector rotation (x, z).
-     *      7) Agent's thrust force being applied (Newton).
+     *      1) Agent relative position to landing pad (x, y, z).
+     *      2) Agent relative rotation to landing pad (x, y, z).
+     *      3) Agent velocity (x, y, z).
+     *      4) Agent distance to the landing pad (y in metres).
+     *      5) Agent angular momentum (x, y, z).
+     *      6) Agent thrust vector rotation (x, z).
+     *      7) Agent thrust force being applied (Kilo Newton).
      *
      *  We collect a total of 16 observations to train our agent with.
      */
@@ -80,12 +80,12 @@ public class SN11Agent : Agent
      *      1) Reward in range of 0 to 1 where:
      *          0 = Landed just outside edge of landing pad.
      *          1 = Landed dead centre of landing pad.
-     *      2) Reward in range of 0 to 1 where:
-     *          0 = Touched ground sideways or upside down.
-     *          1 = Touched ground upright.
+     *      2) Reward in range of 0 to 0.1 where:
+     *          0 = Rocket orientation isn't within upright range.
+     *          1 = Rocket orientation is within upright range.
      *      3) Reward in range of 0 to 1 where:
-     *          0 = Touched ground at velcotiy greater than 10MPH.
-     *          1 = Touched ground at velocity less than 1MPH.
+     *          0 = Touched ground at velocity greater than 10 m/s.
+     *          1 = Touched ground at velocity less than 1 m/s.
      *          TODO: Find better MPH values that aren't so arbitrary.
      *
      *  Using the defined action an reward space above we should be able to
