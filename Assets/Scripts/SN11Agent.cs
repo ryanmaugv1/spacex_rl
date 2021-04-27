@@ -21,10 +21,17 @@ using Unity.MLAgents.Actuators;
  */
 public class SN11Agent : Agent
 {
-    /// Agent thruster transform used for applying force at position for rocket.
-    public Transform AgentThrustVector;
+    [Header("Environment Properties")]
     /// Landing pad transform used for relative positioning of rocket and reward calculation.
     public Transform LandingPad;
+
+    [Header("Agent Properties")]
+    /// Agent thruster transform used for applying force at position for rocket.
+    public Transform ThrustVector;
+    /// Minimum positional value agent can be initialised at.
+    public Vector3 MinInitPosition;
+    /// Maximum positional value agent can be initialised at.
+    public Vector3 MaxInitPosition;
 
     /// Rigidbody Component belonging to agent (used for applying actions).
     private Rigidbody AgentRigidbody;
@@ -40,21 +47,27 @@ public class SN11Agent : Agent
      *  Initializing & Resetting Agent On Episode Begin
      *
      *  We will initialise/reset our agent in the followng state:
-     *      1) Set Y-axis transform position within 250-500CM range.
+     *      1) Set Y-axis transform position within 250-500CM range relative to landing pad y-axis.
      *      2) Set X & Z axis transform position within 50-100CM radius relative to landing pad.
+     *          - Prevents positioning of agent directly above landing pad.
      *      3) Set X, Y & Z axis transform rotation randomly.
      *
      *  This should ensure reset/init the environment in random acceptable states
      *  so that our agent can learn a more general and robust policy.
      */
-    public override void OnEpisodeBegin() {}
+    public override void OnEpisodeBegin() {
+        SetAgentYPosition();
+    }
 
 
     #region OnEpisodeBegin Helper Methods
 
 
-    /// Set agent Y position randomly within height range.
-    private void SetAgentYPosition() {}
+    /// Set agent Y position randomly within height range relative to landing pad.
+    private void SetAgentYPosition() {
+        float distanceFromLandingPad = Random.Range(MinInitPosition.y, MaxInitPosition.y) + LandingPad.position.y;
+        transform.position = new Vector3(transform.position.x, distanceFromLandingPad, transform.position.z);
+    }
 
 
     /// Set agent X & Z position randomly within area range relative to landing pad.
@@ -78,7 +91,7 @@ public class SN11Agent : Agent
      *      - Agent distance to the landing pad/ground (y in metres).
      *      - Agent angular momentum (x, y, z).
      *      - Agent thrust vector orientation (x, z).
-     *      - Agent thrust force being applied (Newton).
+     *      - Agent thrust force being applied (Kilo Newton).
      *
      *  We collect a total of 16 observations to train our agent with.
      */
@@ -105,8 +118,14 @@ public class SN11Agent : Agent
     }
 
 
-    /// Returns agent distance from ground in metres.
+    /// Returns agent distance from ground below in metres.
     private float GetAgentDistanceFromGround() {
+        return 0.0f;
+    }
+
+
+    /// Returns agent distance from landing pad.
+    private float GetAgentDistanceFromLandingPad() {
         return 0.0f;
     }
 
@@ -123,7 +142,7 @@ public class SN11Agent : Agent
     }
 
     
-    /// Returns agent current thrust force in Newton (N).
+    /// Returns agent current thrust force in kilo Newton (kN).
     private float GetAgentCurrentThrustForce() {
         return 0.0f;
     }
@@ -137,7 +156,7 @@ public class SN11Agent : Agent
      *
      *  Our agent action are as follows:
      *      - Rotating thrust vector (x, z).
-     *      - Thrust force output (newton).
+     *      - Thrust force output (Kilo Newton).
      *
      *  The agent rewarding logic looks like this:
      *      - Reward in range of 0 to 1 where:
@@ -203,7 +222,7 @@ public class SN11Agent : Agent
     private void SetThrusterOrientation(ActionBuffers actionBuffers) {}
 
 
-    /// Set thrust force within 0 to 12,000 Newton based on agent predicted continuous action.
+    /// Set thrust force within 0 to 12 Kilo Newton (kN) based on agent predicted continuous action.
     private void SetThrustForce(ActionBuffers actionBuffers) {}
 
 
