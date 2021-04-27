@@ -57,6 +57,7 @@ public class SN11Agent : Agent
      */
     public override void OnEpisodeBegin() {
         SetAgentYPosition();
+        SetRandomAgentOrientation();
     }
 
 
@@ -74,8 +75,10 @@ public class SN11Agent : Agent
     private void SetAgentXZPosition() {}
 
 
-    /// Set agent orientation randomly.
-    private void SetRandomAgentOrientation() {}
+    /// Set agent orientation randomly between the values 0 and 360 for each axis.
+    private void SetRandomAgentOrientation() {
+        transform.rotation = Quaternion.Euler(Random.Range(0f, 360f), Random.Range(0f, 360f), Random.Range(0f, 360f));
+    }
 
 
     #endregion
