@@ -67,8 +67,8 @@ public class SN11Agent : Agent
 
     /// Set agent Y position randomly within height range relative to landing pad.
     private void SetAgentYPosition() {
-        float distanceFromLandingPad = Random.Range(MinInitPosition.y, MaxInitPosition.y) + LandingPad.position.y;
-        transform.position = new Vector3(transform.position.x, distanceFromLandingPad, transform.position.z);
+        float heightAboveLandingPad = Random.Range(MinInitPosition.y, MaxInitPosition.y) + LandingPad.position.y;
+        transform.position = new Vector3(transform.position.x, heightAboveLandingPad, transform.position.z);
     }
 
 
