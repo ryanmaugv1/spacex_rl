@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7251742817033893089}
   - component: {fileID: 7251742817033893094}
   - component: {fileID: 7251742817033893095}
+  - component: {fileID: 963194229}
   m_Layer: 0
   m_Name: Agent Camera
   m_TagString: MainCamera
@@ -83,6 +84,21 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7251742817033893092}
   m_Enabled: 1
+--- !u!114 &963194229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7251742817033893092}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80e76470c2da5b644a9ccca5439dbded, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Target: {fileID: 7145493893803909305}
+  Distance: 10
+  Speed: 10
 --- !u!1 &7251742817781819538
 GameObject:
   m_ObjectHideFlags: 0
@@ -189,6 +205,26 @@ PrefabInstance:
       propertyPath: LandingPad
       value: 
       objectReference: {fileID: 7251742816245646312}
+    - target: {fileID: 1108501340850132248, guid: 63f3d369990386547922d13a6d32f61f, type: 3}
+      propertyPath: MaxInitPosition.x
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 1108501340850132248, guid: 63f3d369990386547922d13a6d32f61f, type: 3}
+      propertyPath: MaxInitPosition.z
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 1108501340850132248, guid: 63f3d369990386547922d13a6d32f61f, type: 3}
+      propertyPath: MinInitPosition.x
+      value: -100
+      objectReference: {fileID: 0}
+    - target: {fileID: 1108501340850132248, guid: 63f3d369990386547922d13a6d32f61f, type: 3}
+      propertyPath: MinInitPosition.z
+      value: -100
+      objectReference: {fileID: 0}
+    - target: {fileID: 1261189081896033840, guid: 63f3d369990386547922d13a6d32f61f, type: 3}
+      propertyPath: m_Mass
+      value: 4200
+      objectReference: {fileID: 0}
     - target: {fileID: 3622396644923834745, guid: 63f3d369990386547922d13a6d32f61f, type: 3}
       propertyPath: m_RootOrder
       value: 0
