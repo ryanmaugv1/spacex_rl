@@ -96,10 +96,10 @@ public class SN11Agent : Agent
      *      - Agent relative position to landing pad (x, y, z).
      *      - Agent orientation (x, y, z).
      *      - Agent velocity (x, y, z).
-     *      - Agent distance to the landing pad/ground (y in metres).
+     *      - Agent distance to the ground (y in metres).
      *      - Agent angular momentum (x, y, z).
      *      - Agent thrust vector orientation (x, z).
-     *      - Agent thrust force being applied (Kilo Newton).
+     *      - Agent thrust force being applied (Newtons).
      *
      *  We collect a total of 16 observations to train our agent with.
      */
@@ -150,7 +150,7 @@ public class SN11Agent : Agent
     }
 
     
-    /// Returns agent current thrust force in kilo Newton (kN).
+    /// Returns agent current thrust force in Newtons (N).
     private float GetAgentCurrentThrustForce() {
         return 0.0f;
     }
@@ -164,7 +164,7 @@ public class SN11Agent : Agent
      *
      *  Our agent action are as follows:
      *      - Rotating thrust vector (x, z).
-     *      - Thrust force output (Kilo Newton).
+     *      - Thrust force output (Newtons).
      *
      *  The agent rewarding logic looks like this:
      *      - Reward in range of 0 to 1 where:
@@ -230,7 +230,7 @@ public class SN11Agent : Agent
     private void SetThrusterOrientation(ActionBuffers actionBuffers) {}
 
 
-    /// Set thrust force within 0 to 12 Kilo Newton (kN) based on agent predicted continuous action.
+    /// Set thrust force within 0 to 12,000 Newtons (N) based on agent predicted continuous action.
     private void SetThrustForce(ActionBuffers actionBuffers) {}
 
 
