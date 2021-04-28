@@ -58,6 +58,7 @@ public class SN11Agent : Agent
     public override void OnEpisodeBegin() {
         SetAgentYPosition();
         SetRandomAgentOrientation();
+        SetAgentXZPosition();
     }
 
 
@@ -72,7 +73,11 @@ public class SN11Agent : Agent
 
 
     /// Set agent X & Z position randomly within area range relative to landing pad.
-    private void SetAgentXZPosition() {}
+    private void SetAgentXZPosition() {
+        float xOffsetFromLandingPad = Random.Range(MinInitPosition.x, MaxInitPosition.x) + LandingPad.position.x;
+        float zOffsetFromLandingPad = Random.Range(MinInitPosition.z, MaxInitPosition.z) + LandingPad.position.z;
+        transform.position = new Vector3(xOffsetFromLandingPad, transform.position.y, zOffsetFromLandingPad);
+    }
 
 
     /// Set agent orientation randomly between the values 0 and 360 for each axis.
