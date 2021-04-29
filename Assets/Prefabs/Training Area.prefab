@@ -268,11 +268,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1261189081896033840, guid: 63f3d369990386547922d13a6d32f61f, type: 3}
       propertyPath: m_UseGravity
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1261189081896033840, guid: 63f3d369990386547922d13a6d32f61f, type: 3}
       propertyPath: m_IsKinematic
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3622396644923834745, guid: 63f3d369990386547922d13a6d32f61f, type: 3}
       propertyPath: m_RootOrder
