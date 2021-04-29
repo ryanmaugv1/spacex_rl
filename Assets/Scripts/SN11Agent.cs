@@ -149,6 +149,19 @@ public class SN11Agent : Agent
     
     /// Return agent current thrust in Newtons (N).
     private float GetAgentCurrentThrust() => AgentThrust;
+
+
+    /// Logs all agent observations for current state.
+    private void DebugLogAgentObservations() {
+        Debug.Log("===================== AGENT DATA =====================");
+        Debug.Log("Agent Orientation: " + GetAgentOrientation());
+        Debug.Log("Agent Velocity: " + GetAgentVelocity());
+        Debug.Log("Agent Distance From Landing Pad: " + GetAgentDistanceFromLandingPad());
+        Debug.Log("Agent Distance From Ground: " + GetAgentDistanceFromGround());
+        Debug.Log("Agent Angular Velocity: " + GetAgentAngularVelocity());
+        Debug.Log("Agent Thrust Vector Orientation: " + GetThrustVectorOrientation());
+        Debug.Log("Agent Thrust: " + GetAgentCurrentThrust());
+        Debug.Log("=======================================================");
     }
 
 
