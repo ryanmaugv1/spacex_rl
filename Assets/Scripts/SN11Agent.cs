@@ -138,7 +138,7 @@ public class SN11Agent : Agent
         sensor.AddObservation(agentAngularVelocity.z);
 
         // Add observations of agent thrust vector orientation.
-        var agentThrustVectorOrientation = GetThrustVectorOrientation();
+        var agentThrustVectorOrientation = GetAgentThrustVectorOrientation();
         sensor.AddObservation(agentThrustVectorOrientation.x);
         sensor.AddObservation(agentThrustVectorOrientation.z);
 
@@ -182,7 +182,7 @@ public class SN11Agent : Agent
 
 
     /// Return agent thrust vector orientation (x, z respectively).
-    private (float x, float z) GetThrustVectorOrientation() {
+    private (float x, float z) GetAgentThrustVectorOrientation() {
         return (ThrustVector.localEulerAngles.x, ThrustVector.localEulerAngles.z);
     }
 
@@ -199,7 +199,7 @@ public class SN11Agent : Agent
         Debug.Log("Agent Distance From Landing Pad: " + GetAgentPositionRelativeToLandingPad());
         Debug.Log("Agent Distance From Ground: " + GetAgentDistanceFromGround());
         Debug.Log("Agent Angular Velocity: " + GetAgentAngularVelocity());
-        Debug.Log("Agent Thrust Vector Orientation: " + GetThrustVectorOrientation());
+        Debug.Log("Agent Thrust Vector Orientation: " + GetAgentThrustVectorOrientation());
         Debug.Log("Agent Thrust: " + GetAgentCurrentThrust());
         Debug.Log("=======================================================");
     }
