@@ -138,9 +138,8 @@ public class SN11Agent : Agent
         sensor.AddObservation(agentAngularVelocity.z);
 
         // Add observations of agent thrust vector orientation.
-        Vector3 agentThrustVectorOrientation = GetThrustVectorOrientation();
+        var agentThrustVectorOrientation = GetThrustVectorOrientation();
         sensor.AddObservation(agentThrustVectorOrientation.x);
-        sensor.AddObservation(agentThrustVectorOrientation.y);
         sensor.AddObservation(agentThrustVectorOrientation.z);
 
         // Add observations of agent thrust force.
