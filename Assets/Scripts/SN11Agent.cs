@@ -112,12 +112,8 @@ public class SN11Agent : Agent
     private Vector3 GetAgentOrientation() => transform.localEulerAngles;
 
 
-
-
-    /// Returns agent velocity (x, y, z respectively).
-    private Vector3 GetAgentVelocity() {
-        return Vector3.zero;
-    }
+    /// Return agent velocity (x, y, z respectively).
+    private Vector3 GetAgentVelocity() => AgentRigidbody.velocity;
 
 
     /// Returns agent distance from ground below in metres.
