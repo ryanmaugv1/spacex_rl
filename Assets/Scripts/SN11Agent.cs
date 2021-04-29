@@ -116,9 +116,16 @@ public class SN11Agent : Agent
     private Vector3 GetAgentVelocity() => AgentRigidbody.velocity;
 
 
-    /// Returns agent distance from ground below in metres.
+    /// Return agent distance from ground below in metres (else -1 if no ground below).
     private float GetAgentDistanceFromGround() {
-        return 0.0f;
+        RaycastHit hit;
+        Vector3 direction = Vector3.down;
+        if (Physics.Raycast(transform.position, direction, out hit, Mathf.Infinity)) {
+            if (DebugMode) 
+                Debug.DrawRay(transform.position, direction * hit.distance, Color.red);
+            return hit.distance;
+        }
+        return -1;
     }
 
 
