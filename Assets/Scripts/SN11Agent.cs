@@ -99,10 +99,10 @@ public class SN11Agent : Agent
      *  Collect Environment & Agent Sensor Observations
      *
      *  The observations we gather from the environment and agent are:
-     *      - Agent relative position to landing pad (x, y, z).
      *      - Agent orientation (x, y, z).
      *      - Agent velocity (x, y, z).
      *      - Agent distance to the ground (metres).
+     *      - Agent distance to landing pad (x, y, z).
      *      - Agent angular velocity (x, y, z).
      *      - Agent thrust vector orientation (x, z).
      *      - Agent thrust force being applied (Newtons).
@@ -136,9 +136,9 @@ public class SN11Agent : Agent
     }
 
 
-    /// Return agent distance from landing pad.
-    private float GetAgentDistanceFromLandingPad() {
-        return Vector3.Distance(transform.position, LandingPad.position);
+    /// Return agent relative position from landing pad.
+    private Vector3 GetAgentPositionRelativeToLandingPad() {
+        return LandingPad.position + transform.position;
     }
 
 
@@ -161,7 +161,7 @@ public class SN11Agent : Agent
         Debug.Log("===================== AGENT DATA =====================");
         Debug.Log("Agent Orientation: " + GetAgentOrientation());
         Debug.Log("Agent Velocity: " + GetAgentVelocity());
-        Debug.Log("Agent Distance From Landing Pad: " + GetAgentDistanceFromLandingPad());
+        Debug.Log("Agent Distance From Landing Pad: " + GetAgentPositionRelativeToLandingPad());
         Debug.Log("Agent Distance From Ground: " + GetAgentDistanceFromGround());
         Debug.Log("Agent Angular Velocity: " + GetAgentAngularVelocity());
         Debug.Log("Agent Thrust Vector Orientation: " + GetThrustVectorOrientation());
