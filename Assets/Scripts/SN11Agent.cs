@@ -139,9 +139,9 @@ public class SN11Agent : Agent
     private Vector3 GetAgentAngularVelocity() => AgentRigidbody.angularVelocity;
 
 
-    /// Returns agent thrust vector orientation (x, z respectively).
+    /// Return agent thrust vector orientation (x, z respectively).
     private (float x, float z) GetThrustVectorOrientation() {
-        return (0.0f, 0.0f);
+        return (ThrustVector.localEulerAngles.x, ThrustVector.localEulerAngles.z);
     }
 
     
