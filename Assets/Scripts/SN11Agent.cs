@@ -109,7 +109,43 @@ public class SN11Agent : Agent
      *
      *  We collect a total of 16 observations to train our agent with.
      */
-    public override void CollectObservations(VectorSensor sensor) {}
+    public override void CollectObservations(VectorSensor sensor) {
+        // Add observations of agent orientation.
+        Vector3 agentOrientation = GetAgentOrientation();
+        sensor.AddObservation(agentOrientation.x);
+        sensor.AddObservation(agentOrientation.y);
+        sensor.AddObservation(agentOrientation.z);
+
+        // Add observations of agent velocity.
+        Vector3 agentVelocity = GetAgentVelocity();
+        sensor.AddObservation(agentVelocity.x);
+        sensor.AddObservation(agentVelocity.y);
+        sensor.AddObservation(agentVelocity.z);
+
+        // Add observations of agent distance from ground.
+        sensor.AddObservation(GetAgentDistanceFromGround());
+
+        // Add observations of agent position relative to landing pad.
+        Vector3 agentRelPosToLandingPad = GetAgentPositionRelativeToLandingPad();
+        sensor.AddObservation(agentRelPosToLandingPad.x);
+        sensor.AddObservation(agentRelPosToLandingPad.y);
+        sensor.AddObservation(agentRelPosToLandingPad.z);
+
+        // Add observations of agent angular velocity.
+        Vector3 agentAngularVelocity = GetAgentAngularVelocity();
+        sensor.AddObservation(agentAngularVelocity.x);
+        sensor.AddObservation(agentAngularVelocity.y);
+        sensor.AddObservation(agentAngularVelocity.z);
+
+        // Add observations of agent thrust vector orientation.
+        Vector3 agentThrustVectorOrientation = GetThrustVectorOrientation();
+        sensor.AddObservation(agentThrustVectorOrientation.x);
+        sensor.AddObservation(agentThrustVectorOrientation.y);
+        sensor.AddObservation(agentThrustVectorOrientation.z);
+
+        // Add observations of agent thrust force.
+        sensor.AddObservation(GetAgentCurrentThrust());       
+    }
 
     
     #region CollectObservations Helper Methods
