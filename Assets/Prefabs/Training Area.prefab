@@ -234,6 +234,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7251742817781819549}
     m_Modifications:
+    - target: {fileID: 919132147828482968, guid: 63f3d369990386547922d13a6d32f61f, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1108501340850132248, guid: 63f3d369990386547922d13a6d32f61f, type: 3}
+      propertyPath: DebugMode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1108501340850132248, guid: 63f3d369990386547922d13a6d32f61f, type: 3}
       propertyPath: LandingPad
       value: 
@@ -257,6 +265,14 @@ PrefabInstance:
     - target: {fileID: 1261189081896033840, guid: 63f3d369990386547922d13a6d32f61f, type: 3}
       propertyPath: m_Mass
       value: 420
+      objectReference: {fileID: 0}
+    - target: {fileID: 1261189081896033840, guid: 63f3d369990386547922d13a6d32f61f, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1261189081896033840, guid: 63f3d369990386547922d13a6d32f61f, type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3622396644923834745, guid: 63f3d369990386547922d13a6d32f61f, type: 3}
       propertyPath: m_RootOrder
