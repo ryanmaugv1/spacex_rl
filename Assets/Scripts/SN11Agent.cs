@@ -98,8 +98,8 @@ public class SN11Agent : Agent
      *      - Agent relative position to landing pad (x, y, z).
      *      - Agent orientation (x, y, z).
      *      - Agent velocity (x, y, z).
-     *      - Agent distance to the ground (y in metres).
-     *      - Agent angular momentum (x, y, z).
+     *      - Agent distance to the ground (metres).
+     *      - Agent angular velocity (x, y, z).
      *      - Agent thrust vector orientation (x, z).
      *      - Agent thrust force being applied (Newtons).
      *
@@ -107,6 +107,7 @@ public class SN11Agent : Agent
      */
     public override void CollectObservations(VectorSensor sensor) {}
 
+    
     #region CollectObservations Helper Methods
 
 
