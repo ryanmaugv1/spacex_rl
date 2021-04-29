@@ -135,10 +135,8 @@ public class SN11Agent : Agent
     }
 
 
-    /// Returns agent angular momentum (x, y, z respectively).
-    private Vector3 GetAgentAngularMomentum() {
-        return Vector3.zero;
-    }
+    /// Return agent angular velocity (x, y, z respectively).
+    private Vector3 GetAgentAngularVelocity() => AgentRigidbody.angularVelocity;
 
 
     /// Returns agent thrust vector orientation (x, z respectively).
