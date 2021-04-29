@@ -108,16 +108,10 @@ public class SN11Agent : Agent
     #region CollectObservations Helper Methods
 
 
-    /// Returns agent relative position from landing pad (x, y, z respectively)
-    private Vector3 GetAgentRelativePositionFromLandingPad() {
-        return Vector3.zero;
-    }
+    /// Return agent orientation (x, y, z respectively with value between 0 - 360).
+    private Vector3 GetAgentOrientation() => transform.localEulerAngles;
 
 
-    /// Returns agent orientation (x, y, z respectively).
-    private Vector3 GetAgentOrientation() {
-        return Vector3.zero;
-    }
 
 
     /// Returns agent velocity (x, y, z respectively).
