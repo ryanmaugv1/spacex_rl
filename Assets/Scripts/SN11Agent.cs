@@ -22,6 +22,8 @@ using Unity.MLAgents.Actuators;
 public class SN11Agent : Agent
 {
     [Header("Environment Properties")]
+    /// Enable debug features like logging and ray drawing.
+    public bool DebugMode;
     /// Landing pad transform used for relative positioning of rocket and reward calculation.
     public Transform LandingPad;
 
@@ -61,6 +63,8 @@ public class SN11Agent : Agent
         SetAgentYPosition();
         SetRandomAgentOrientation();
         SetAgentXZPosition();
+        if (DebugMode)
+            DebugLogAgentObservations();
     }
 
 
