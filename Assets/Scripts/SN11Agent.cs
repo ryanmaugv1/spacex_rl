@@ -35,6 +35,8 @@ public class SN11Agent : Agent
 
     /// Rigidbody Component belonging to agent (used for applying actions).
     private Rigidbody AgentRigidbody;
+    /// Current amount of thrust produced by agent in Newtons.
+    private float AgentThrust;
 
     
     // Start is called before the first frame update
@@ -145,9 +147,8 @@ public class SN11Agent : Agent
     }
 
     
-    /// Returns agent current thrust force in Newtons (N).
-    private float GetAgentCurrentThrustForce() {
-        return 0.0f;
+    /// Return agent current thrust in Newtons (N).
+    private float GetAgentCurrentThrust() => AgentThrust;
     }
 
 
