@@ -129,9 +129,9 @@ public class SN11Agent : Agent
     }
 
 
-    /// Returns agent distance from landing pad.
+    /// Return agent distance from landing pad.
     private float GetAgentDistanceFromLandingPad() {
-        return 0.0f;
+        return Vector3.Distance(transform.position, LandingPad.position);
     }
 
 
