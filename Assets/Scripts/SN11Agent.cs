@@ -39,6 +39,8 @@ public class SN11Agent : Agent
     private Rigidbody AgentRigidbody;
     /// Current amount of thrust produced by agent in Newtons.
     private float AgentThrust;
+    /// Holds minimal agent collision info needed.
+    private CollisionInfo AgentCollisionInfo = new CollisionInfo();
 
     
     // Start is called before the first frame update
