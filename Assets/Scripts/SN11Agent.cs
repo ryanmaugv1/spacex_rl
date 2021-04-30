@@ -136,12 +136,8 @@ public class SN11Agent : Agent
     /// Return agent distance from ground below in metres (else -1 if no ground below).
     private float GetAgentDistanceFromGround() {
         RaycastHit hit;
-        Vector3 direction = Vector3.down;
-        if (Physics.Raycast(transform.position, direction, out hit, Mathf.Infinity)) {
-            if (DebugMode) 
-                Debug.DrawRay(transform.position, direction * hit.distance, Color.red);
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, Mathf.Infinity))
             return hit.distance;
-        }
         return -1;
     }
 
@@ -262,4 +258,14 @@ public class SN11Agent : Agent
 
 
     #endregion
+    
+
+    void OnDrawGizmos() {
+        if (!DebugMode) return;
+
+        Gizmos.color  = Color.green;
+        
+        // Draw line showing agent ray cast to ground (used for gauging distance from ground).
+        Gizmos.DrawRay(transform.position, Vector3.down * GetAgentDistanceFromGround());
+    }
 }
