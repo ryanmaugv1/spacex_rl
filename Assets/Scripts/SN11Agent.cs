@@ -258,6 +258,20 @@ public class SN11Agent : Agent
 
 
     #endregion
+
+
+    void OnCollisionEnter(Collision collision) {
+        AgentCollisionInfo.CollisionCount += 1;
+        AgentCollisionInfo.CollisionTags.Add(collision.gameObject.tag);
+        if (DebugMode) AgentCollisionInfo.DebugLogState();
+    }
+
+
+    void OnCollisionExit(Collision collision) {
+        AgentCollisionInfo.CollisionCount -= 1;
+        AgentCollisionInfo.RemoveTag(collision.gameObject.tag);
+        if (DebugMode) AgentCollisionInfo.DebugLogState();
+    }
     
 
     void OnDrawGizmos() {
