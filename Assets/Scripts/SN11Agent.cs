@@ -216,7 +216,6 @@ public class SN11Agent : Agent
     #region State Check Helpers
 
 
-    /// Checks if agent has landed upright (we don't care about whether it's on pad or not).
     /// Check if agent (x, z) axis rotations are both 0.0f.
     private bool IsAgentUpright() {
         return transform.eulerAngles.x == 0f && transform.eulerAngles.z == 0f;
