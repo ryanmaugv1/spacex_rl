@@ -24,6 +24,8 @@ public class SN11Agent : Agent
     [Header("Environment Properties")]
     /// Enable debug features like logging and ray drawing.
     public bool DebugMode;
+    /// Time in seconds before we timeout episode because agent took too long to complete episode.
+    public int EpisodeTimeout = 120;
     /// Defines out-of-range distance (both direction) for each rocket axis relative to landing pad.
     public Vector3 OutOfRangeDistance = new Vector3(2000f, 2000f, 2000f);
     /// Landing pad transform used for relative positioning of rocket and reward calculation.
