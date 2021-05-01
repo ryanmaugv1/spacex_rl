@@ -231,8 +231,9 @@ public class SN11Agent : Agent
     }
 
 
+    /// Check if agent has landed defined as being upright, stationary and colliding.
     private bool HasAgentLanded() {
-        return false;
+        return IsAgentStationary() && IsAgentUpright() && AgentCollisionInfo.Colliding();
     }
 
 
