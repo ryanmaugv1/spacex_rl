@@ -25,7 +25,7 @@ public class SN11Agent : Agent
     /// Enable debug features like logging and ray drawing.
     public bool DebugMode;
     /// Defines out-of-range distance (both direction) for each rocket axis relative to landing pad.
-    public Vector3 OutOfRangeDistance;
+    public Vector3 OutOfRangeDistance = new Vector3(2000f, 2000f, 2000f);
     /// Landing pad transform used for relative positioning of rocket and reward calculation.
     public Transform LandingPad;
 
@@ -33,9 +33,9 @@ public class SN11Agent : Agent
     /// Agent thruster transform used for applying force at position for rocket.
     public Transform ThrustVector;
     /// Minimum positional value agent can be initialised at.
-    public Vector3 MinInitPosition;
+    public Vector3 MinInitPosition = new Vector3(-100f, 250f, -100f);
     /// Maximum positional value agent can be initialised at.
-    public Vector3 MaxInitPosition;
+    public Vector3 MaxInitPosition = new Vector3(100f, 500f, 100f);
 
     /// Rigidbody Component belonging to agent (used for applying actions).
     private Rigidbody AgentRigidbody;
