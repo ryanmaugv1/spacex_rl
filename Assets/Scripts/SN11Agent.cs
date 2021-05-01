@@ -216,9 +216,11 @@ public class SN11Agent : Agent
     #region State Check Helpers
 
 
-    /// Check if agent (x, z) axis rotations are both 0.0f.
+    /// Check if agent (x, z) axis rotations are both within range (-ε >= 0.0 <= ε).
     private bool IsAgentUpright() {
-        return transform.eulerAngles.x == 0f && transform.eulerAngles.z == 0f;
+        float axisEpsilon = 0.01f;
+        return transform.eulerAngles.x >= -axisEpsilon && transform.eulerAngles.x <= axisEpsilon
+            && transform.eulerAngles.z >= -axisEpsilon && transform.eulerAngles.z <= axisEpsilon;
     }
 
 
