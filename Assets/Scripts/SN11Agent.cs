@@ -224,16 +224,10 @@ public class SN11Agent : Agent
     }
 
 
-    /// Check if agent velocity and angular velocity falls below defined thresholds.
+    /// Check if agent velocity and angular velocity on all axis is 0.0f.
     private bool IsAgentStationary() {
-        Vector3 velocityThreshold = new Vector3(0f, 0f, 0f);
-        Vector3 angularVelocityThreshold = new Vector3(0f, 0f, 0f);
-        return AgentRigidbody.velocity.x <= velocityThreshold.x 
-            && AgentRigidbody.velocity.y <= velocityThreshold.y
-            && AgentRigidbody.velocity.z <= velocityThreshold.z 
-            && AgentRigidbody.angularVelocity.x <= angularVelocityThreshold.x
-            && AgentRigidbody.angularVelocity.y <= angularVelocityThreshold.y
-            && AgentRigidbody.angularVelocity.z <= angularVelocityThreshold.z;
+        return AgentRigidbody.velocity == new Vector3(0.0f, 0.0f, 0.0f)
+            && AgentRigidbody.angularVelocity == new Vector3(0.0f, 0.0f, 0.0f);
     }
 
 
