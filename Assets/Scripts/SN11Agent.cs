@@ -237,9 +237,9 @@ public class SN11Agent : Agent
     }
 
 
-    /// Check if agent has landed on landing pad (we don't care about orientation).
+    /// Check if agent has not only landed but also landed on landing pad.
     private bool HasAgentLandedOnPad() {
-        return false;
+        return HasAgentLanded() && AgentCollisionInfo.CheckTagExists("Landing Pad");
     }
 
 
