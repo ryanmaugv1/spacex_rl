@@ -16,6 +16,18 @@ public class CollisionInfo {
     public List<string> CollisionTags = new List<string>();
 
     
+    /// Add new collision information.
+    public void AddCollision(string tag) {
+        CollisionCount += 1;
+        CollisionTags.Add(tag);
+    }
+
+    /// Remove collision information.
+    public void RemoveCollision(string tag) {
+        CollisionCount -= 1;
+        RemoveTag(tag);
+    }
+
     /// Return whether we are colliding with any objects.
     public bool Colliding() => CollisionCount == 0 ? false : true;
 
@@ -23,7 +35,7 @@ public class CollisionInfo {
     public bool CheckTagExists(string tag) => CollisionTags.Exists(ctag => ctag == tag);
     
     /// Removes a tag from tag collision tags list.
-    public void RemoveTag(string tag) {
+    private void RemoveTag(string tag) {
         int i = CollisionTags.FindIndex(ctag => ctag == tag);
         CollisionTags.RemoveAt(i);
     }

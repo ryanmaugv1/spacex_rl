@@ -162,9 +162,9 @@ public class SN11Agent : Agent
      *  an agent collision info structure.
      */
     void OnCollisionEnter(Collision collision) {
-        AgentCollisionInfo.CollisionCount += 1;
-        AgentCollisionInfo.CollisionTags.Add(collision.gameObject.tag);
-        if (DebugMode) AgentCollisionInfo.DebugLogState();
+        AgentCollisionInfo.AddCollision(collision.gameObject.tag);
+        if (DebugMode) 
+            AgentCollisionInfo.DebugLogState();
     }
 
 
@@ -175,9 +175,9 @@ public class SN11Agent : Agent
      *  object we just exited collision with.
      */
     void OnCollisionExit(Collision collision) {
-        AgentCollisionInfo.CollisionCount -= 1;
-        AgentCollisionInfo.RemoveTag(collision.gameObject.tag);
-        if (DebugMode) AgentCollisionInfo.DebugLogState();
+        AgentCollisionInfo.RemoveCollision(collision.gameObject.tag);
+        if (DebugMode) 
+            AgentCollisionInfo.DebugLogState();
     }
     
 
