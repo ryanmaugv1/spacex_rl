@@ -46,10 +46,52 @@ public class SN11Agent : Agent
     /// Holds minimal agent collision info needed.
     private CollisionInfo AgentCollisionInfo = new CollisionInfo();
 
+
+    // TODO:
+    // Make the floor and landing pad a cube rather than a plane because ground ray doesn't
+    // interest when landing upright on plane. This will also fix bug where agent falls
+    // through ground as collision isn't detected on-time due to surface being too thin.
+
     
     // Start is called before the first frame update
     void Start() {
         AgentRigidbody = GetComponent<Rigidbody>();
+    }
+
+
+    /**
+     *  Fixed Update Loop (called before internal physics update)
+     *
+     *  The agent rewarding logic looks like this:
+     *      - Reward in range of 0 to 1 where:
+     *          0 = Landed just outside edge of landing pad.
+     *          1 = Landed dead centre of landing pad.
+     *      - Reward in range of 0 to 0.1 where:
+     *          0 = Rocket orientation isn't within upright range.
+     *          1 = Rocket orientation is within upright range.
+     *      - Reward in range of 0 to 1 where:
+     *          0 = Touched ground at velocity greater than 5 m/s.
+     *          1 = Touched ground at velocity less than 5 m/s.
+     *          TODO: Find better MPH values that aren't so arbitrary.
+     *
+     *  Using the defined action an reward space above we should be able to
+     *  find an optimal policy for self-landing the agent rocket upright on
+     *  a designated landing pad.
+     *
+     *  We want to reset our agent if we end up in the following states:
+     *      - Agent Lands Upright (and doesn't move for 5 second)
+     *      - Agent Crashed
+     *      - Agent Out Of Range
+     */
+    void FixedUpdate() {
+        // Debug.Log("Upright? " + IsAgentUpright());
+        // Debug.Log("Stationary? " + IsAgentStationary());
+        // Debug.Log("Landed? " + HasAgentLanded());
+        // Debug.Log("Landed On Pad? " + HasAgentLandedOnPad());
+        // Debug.Log("Crashed? " + HasAgentCrashLanded());
+        // Debug.Log("Out Of Range? " + IsAgentOutOfRange());
+
+        // TODO: Implement episode timeout.
     }
 
 
@@ -72,33 +114,6 @@ public class SN11Agent : Agent
         if (DebugMode)
             DebugLogAgentObservations();
     }
-
-
-    #region OnEpisodeBegin Helper Methods
-
-
-    /// Set agent Y position randomly within height range relative to landing pad.
-    private void SetAgentYPosition() {
-        float heightAboveLandingPad = Random.Range(MinInitPosition.y, MaxInitPosition.y) + LandingPad.position.y;
-        transform.position = new Vector3(transform.position.x, heightAboveLandingPad, transform.position.z);
-    }
-
-
-    /// Set agent X & Z position randomly within area range relative to landing pad.
-    private void SetAgentXZPosition() {
-        float xOffsetFromLandingPad = Random.Range(MinInitPosition.x, MaxInitPosition.x) + LandingPad.position.x;
-        float zOffsetFromLandingPad = Random.Range(MinInitPosition.z, MaxInitPosition.z) + LandingPad.position.z;
-        transform.position = new Vector3(xOffsetFromLandingPad, transform.position.y, zOffsetFromLandingPad);
-    }
-
-
-    /// Set agent orientation randomly between the values 0 and 360 for each axis.
-    private void SetRandomAgentOrientation() {
-        transform.rotation = Quaternion.Euler(Random.Range(0f, 360f), Random.Range(0f, 360f), Random.Range(0f, 360f));
-    }
-
-
-    #endregion
 
 
     /**
@@ -125,8 +140,91 @@ public class SN11Agent : Agent
         sensor.AddObservation(GetAgentCurrentThrust());       
     }
 
+
+    /**
+     *  Performing Action & Rewarding Agent
+     *
+     *  Our agent action are as follows:
+     *      - Rotating thrust vector (x, z).
+     *      - Thrust force output (Newtons).
+     */
+    public override void OnActionReceived(ActionBuffers actionBuffers) {}
+
+
+    // TODO:
+    // Implement Agent.Heuristic() using WASD input to orient rocket and space to thrust.
+
+
+    /**
+     *  Collision Enter Event (One-Shot)
+     *
+     *  Extracts bare-minimal collision information needed by agent into
+     *  an agent collision info structure.
+     */
+    void OnCollisionEnter(Collision collision) {
+        AgentCollisionInfo.CollisionCount += 1;
+        AgentCollisionInfo.CollisionTags.Add(collision.gameObject.tag);
+        if (DebugMode) AgentCollisionInfo.DebugLogState();
+    }
+
+
+    /**
+     *  Collision Exit Event (One-Shot)
+     *
+     *  Updates agent collision information to remove collision info for
+     *  object we just exited collision with.
+     */
+    void OnCollisionExit(Collision collision) {
+        AgentCollisionInfo.CollisionCount -= 1;
+        AgentCollisionInfo.RemoveTag(collision.gameObject.tag);
+        if (DebugMode) AgentCollisionInfo.DebugLogState();
+    }
     
-    #region CollectObservations Helper Methods
+
+    /**
+     *  Draws Debug Mode Gizmos
+     *
+     *  Draws all agent gizmos that aids with visually debugging of non-visual
+     *  elements e.g. distance rays.
+     */
+    void OnDrawGizmos() {
+        if (!DebugMode) return;
+
+        Gizmos.color  = Color.green;
+        
+        // Draw line showing agent ray cast to ground (used for gauging distance from ground).
+        Gizmos.DrawRay(transform.position, Vector3.down * GetAgentDistanceFromGround());
+    }
+
+
+    #region Agent Setters
+
+
+    /// Set agent Y position randomly within height range relative to landing pad.
+    private void SetAgentYPosition() {
+        float heightAboveLandingPad = Random.Range(MinInitPosition.y, MaxInitPosition.y) + LandingPad.position.y;
+        transform.position = new Vector3(transform.position.x, heightAboveLandingPad, transform.position.z);
+    }
+
+
+    /// Set agent X & Z position randomly within area range relative to landing pad.
+    private void SetAgentXZPosition() {
+        float xOffsetFromLandingPad = Random.Range(MinInitPosition.x, MaxInitPosition.x) + LandingPad.position.x;
+        float zOffsetFromLandingPad = Random.Range(MinInitPosition.z, MaxInitPosition.z) + LandingPad.position.z;
+        transform.position = new Vector3(xOffsetFromLandingPad, transform.position.y, zOffsetFromLandingPad);
+    }
+
+
+    /// Set agent orientation randomly between the values 0 and 360 for each axis.
+    private void SetRandomAgentOrientation() {
+        transform.rotation = Quaternion.Euler(Random.Range(0f, 360f), Random.Range(0f, 360f), Random.Range(0f, 360f));
+    }
+
+
+    #endregion
+
+
+    #region Agent Getters
 
 
     /// Return agent orientation (x, y, z respectively with value between 0 - 360).
@@ -166,58 +264,15 @@ public class SN11Agent : Agent
     private float GetAgentCurrentThrust() => AgentThrust;
 
 
-    /// Logs all agent observations for current state.
-    private void DebugLogAgentObservations() {
-        Debug.Log("===================== AGENT DATA =====================");
-        Debug.Log("Agent Orientation: " + GetAgentOrientation());
-        Debug.Log("Agent Velocity: " + GetAgentVelocity());
-        Debug.Log("Agent Distance From Landing Pad: " + GetAgentPositionRelativeToLandingPad());
-        Debug.Log("Agent Distance From Ground: " + GetAgentDistanceFromGround());
-        Debug.Log("Agent Angular Velocity: " + GetAgentAngularVelocity());
-        Debug.Log("Agent Thrust Vector Orientation: " + GetAgentThrustVectorOrientation());
-        Debug.Log("Agent Thrust: " + GetAgentCurrentThrust());
-        Debug.Log("=======================================================");
-    }
-
-
     #endregion
 
 
-    /**
-     *  Performing Action & Rewarding Agent
-     *
-     *  Our agent action are as follows:
-     *      - Rotating thrust vector (x, z).
-     *      - Thrust force output (Newtons).
-     *
-     *  The agent rewarding logic looks like this:
-     *      - Reward in range of 0 to 1 where:
-     *          0 = Landed just outside edge of landing pad.
-     *          1 = Landed dead centre of landing pad.
-     *      - Reward in range of 0 to 0.1 where:
-     *          0 = Rocket orientation isn't within upright range.
-     *          1 = Rocket orientation is within upright range.
-     *      - Reward in range of 0 to 1 where:
-     *          0 = Touched ground at velocity greater than 10 m/s.
-     *          1 = Touched ground at velocity less than 1 m/s.
-     *          TODO: Find better MPH values that aren't so arbitrary.
-     *
-     *  Using the defined action an reward space above we should be able to
-     *  find an optimal policy for self-landing the agent rocket upright on
-     *  a designated landing pad.
-     *
-     *  We want to reset our agent if we end up in the following states:
-     *      - Agent Lands Upright (and doesn't move for 5 second)
-     *      - Agent Crashed
-     *      - Agent Out Of Range
-     */
-    public override void OnActionReceived(ActionBuffers actionBuffers) {}
+    #region Agent State Checkers
 
 
-    #region OnActionReceived Helper Methods
-
-
-    #region State Check Helpers
+    // TODO: 
+    // Do we want a IsAgentUprightWithinRange(Vector3 range) method for rewarding
+    // agent on stabilising to upright-ish orientation during flight?
 
 
     /// Check if agent (x, z) axis rotations are both within range (-ε >= 0.0 <= ε).
@@ -270,7 +325,7 @@ public class SN11Agent : Agent
     #endregion
 
 
-    #region Action Helpers
+    #region Agent Action Helpers
 
 
     /// Set thrust vector orientation (x, z) based on agent predicted continuous actions.
@@ -284,29 +339,22 @@ public class SN11Agent : Agent
     #endregion
 
 
+    #region Debug Helpers
+
+
+    /// Logs all agent observations for current state.
+    private void DebugLogAgentObservations() {
+        Debug.Log("===================== AGENT DATA =====================");
+        Debug.Log("Agent Orientation: " + GetAgentOrientation());
+        Debug.Log("Agent Velocity: " + GetAgentVelocity());
+        Debug.Log("Agent Distance From Landing Pad: " + GetAgentPositionRelativeToLandingPad());
+        Debug.Log("Agent Distance From Ground: " + GetAgentDistanceFromGround());
+        Debug.Log("Agent Angular Velocity: " + GetAgentAngularVelocity());
+        Debug.Log("Agent Thrust Vector Orientation: " + GetAgentThrustVectorOrientation());
+        Debug.Log("Agent Thrust: " + GetAgentCurrentThrust());
+        Debug.Log("=======================================================");
+    }
+
+
     #endregion
-
-
-    void OnCollisionEnter(Collision collision) {
-        AgentCollisionInfo.CollisionCount += 1;
-        AgentCollisionInfo.CollisionTags.Add(collision.gameObject.tag);
-        if (DebugMode) AgentCollisionInfo.DebugLogState();
-    }
-
-
-    void OnCollisionExit(Collision collision) {
-        AgentCollisionInfo.CollisionCount -= 1;
-        AgentCollisionInfo.RemoveTag(collision.gameObject.tag);
-        if (DebugMode) AgentCollisionInfo.DebugLogState();
-    }
-    
-
-    void OnDrawGizmos() {
-        if (!DebugMode) return;
-
-        Gizmos.color  = Color.green;
-        
-        // Draw line showing agent ray cast to ground (used for gauging distance from ground).
-        Gizmos.DrawRay(transform.position, Vector3.down * GetAgentDistanceFromGround());
-    }
 }
