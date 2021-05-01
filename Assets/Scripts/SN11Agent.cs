@@ -24,6 +24,8 @@ public class SN11Agent : Agent
     [Header("Environment Properties")]
     /// Enable debug features like logging and ray drawing.
     public bool DebugMode;
+    /// Defines out-of-range distance (both direction) for each rocket axis relative to landing pad.
+    public Vector3 OutOfRangeDistance;
     /// Landing pad transform used for relative positioning of rocket and reward calculation.
     public Transform LandingPad;
 
@@ -249,8 +251,16 @@ public class SN11Agent : Agent
     }
 
 
-    /// Check if agent has flown too far out of range on any positional axis relative to landing pad.
+    /// Check if agent is out-of-range on any positional axis relative to landing pad.
     private bool IsAgentOutOfRange() {
+        Vector3 padRelPos = GetAgentPositionRelativeToLandingPad();
+        if (padRelPos.x >= OutOfRangeDistance.x 
+            || padRelPos.y >= OutOfRangeDistance.y 
+            || padRelPos.z >= OutOfRangeDistance.z
+            || padRelPos.x <= -OutOfRangeDistance.x
+            || padRelPos.y <= -OutOfRangeDistance.y
+            || padRelPos.z <= -OutOfRangeDistance.z)
+            return true;
         return false;
     }
 
