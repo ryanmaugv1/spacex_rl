@@ -148,7 +148,7 @@ public class SN11Agent : Agent
 
     /// Return agent relative position from landing pad.
     private Vector3 GetAgentPositionRelativeToLandingPad() {
-        return LandingPad.position + transform.position;
+        return transform.position - LandingPad.position;
     }
 
 
