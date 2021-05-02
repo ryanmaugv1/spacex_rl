@@ -34,6 +34,10 @@ public class SN11Agent : Agent
     [Header("Agent Properties")]
     /// Agent thruster transform used for applying force at position for rocket.
     public Transform ThrustVector;
+    /// Maximum thrust force (Newtons) that can be outputted by from thruster.
+    public float MaxThrustForce = 12000f;
+    /// Maximum thruster gimbal in any direction e.g. (30f, 0f, 30f) or (-30f, 0f, -30f).
+    public Vector3 MaxThrusterGimbal = new Vector3(30f, 0f, 30f);
     /// Minimum positional value agent can be initialised at.
     public Vector3 MinInitPosition = new Vector3(-100f, 250f, -100f);
     /// Maximum positional value agent can be initialised at.
@@ -148,11 +152,81 @@ public class SN11Agent : Agent
      *      - Rotating thrust vector (x, z).
      *      - Thrust force output (Newtons).
      */
-    public override void OnActionReceived(ActionBuffers actionBuffers) {}
+    public override void OnActionReceived(ActionBuffers actionBuffers) {
+        // Get respective control signals from agent action buffers.
+        float xThrustVecControlSignal = actionBuffers.ContinuousActions[0];
+        float zThrustVecControlSignal = actionBuffers.ContinuousActions[1];
+        float thrustControlSignal     = actionBuffers.ContinuousActions[2];
+
+        // Clamp control signals values to expected range to prevent unrealistic values or behaviour.
+        xThrustVecControlSignal = Mathf.Clamp(xThrustVecControlSignal, -MaxThrusterGimbal.x, MaxThrusterGimbal.x);
+        zThrustVecControlSignal = Mathf.Clamp(zThrustVecControlSignal, -MaxThrusterGimbal.z, MaxThrusterGimbal.z);
+        thrustControlSignal     = Mathf.Clamp(thrustControlSignal, 0f, MaxThrustForce);
+
+        // TODO: Show control signals in UI.
+        // TODO: Display thurst fire VFX when thrust force is not 0.
+
+        if (DebugMode) {
+            Debug.Log("Thrust X Control Signal: " + xThrustVecControlSignal);
+            Debug.Log("Thrust Z Control Signal: " + zThrustVecControlSignal);
+            Debug.Log("Thrust Control Signal: "   + thrustControlSignal);
+        }
+
+        // Hold original thruster orientation for resetting it later.
+        Quaternion originalThrusterOrientation = ThrustVector.rotation;
+
+        // Update thrust vector orientation relative to agents based on control signals.
+        Vector3 thrusterOrientationOffset = new Vector3(xThrustVecControlSignal, 0f, zThrustVecControlSignal);
+        Vector3 newThrusterOrientation = ThrustVector.eulerAngles + thrusterOrientationOffset;
+        ThrustVector.rotation = Quaternion.Euler(newThrusterOrientation);
+    
+        // Apply force to agent at thruster position in direction of thruster.
+        Vector3 thrustDirection = ThrustVector.up;
+        AgentRigidbody.AddForceAtPosition(thrustDirection * thrustControlSignal,  ThrustVector.position);
+
+        // Reset rotation of thruster back to original to prevent offsets from carrying over.
+        ThrustVector.rotation = originalThrusterOrientation;
+    }
 
 
-    // TODO:
-    // Implement Agent.Heuristic() using WASD input to orient rocket and space to thrust.
+    /**
+     *  Manually Control Agent Action (Heuristic)
+     *
+     *  When agent behaviour type is set to "Heuristic" we will be able to control
+     *  the agent manually using keyboard inputs.
+     */
+    public override void Heuristic(in ActionBuffers actionsBuffers) {
+        // TODO: Allow thrust adjustment using scroll wheel.
+
+        // Set agent thrust vector x-axis rotation on D or A input.
+        float thrustVectorRotationX = 0f;
+        if (Input.GetKey(KeyCode.D))
+            thrustVectorRotationX = -30f;
+        else if (Input.GetKey(KeyCode.A))
+            thrustVectorRotationX = 30f;
+
+        // Set agent thrust vector z-axis rotation on W or S input.
+        float thrustVectorRotationZ = 0f;
+        if (Input.GetKey(KeyCode.W))
+            thrustVectorRotationZ = 30f;
+        else if (Input.GetKey(KeyCode.S))
+            thrustVectorRotationZ = -30f;
+
+        // Set thrust force if W, A, S, D or SPACE is pressed.
+        float thrustForce = 0f;
+        if (Input.GetKey(KeyCode.W) 
+            || Input.GetKey(KeyCode.A) 
+            || Input.GetKey(KeyCode.S) 
+            || Input.GetKey(KeyCode.D)
+            || Input.GetKey(KeyCode.Space))
+            thrustForce = 6000f;
+        
+        // Populate continuous action buffer with actions derived from input.
+        var continuousActionsOut = actionsBuffers.ContinuousActions;
+        continuousActionsOut[0]  = thrustVectorRotationX;
+        continuousActionsOut[1]  = thrustVectorRotationZ;
+        continuousActionsOut[2]  = thrustForce;
+    }
 
 
     /**
