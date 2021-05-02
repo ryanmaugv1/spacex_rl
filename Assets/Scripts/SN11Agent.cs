@@ -31,13 +31,15 @@ public class SN11Agent : Agent
     /// Landing pad transform used for relative positioning of rocket and reward calculation.
     public Transform LandingPad;
 
-    [Header("Agent Properties")]
+    [Header("Agent Thruster Properties")]
     /// Agent thruster transform used for applying force at position for rocket.
     public Transform ThrustVector;
     /// Maximum thrust force (Newtons) that can be outputted by from thruster.
     public float MaxThrustForce = 12000f;
     /// Maximum thruster gimbal in any direction e.g. (30f, 0f, 30f) or (-30f, 0f, -30f).
     public Vector3 MaxThrusterGimbal = new Vector3(30f, 0f, 30f);
+
+    [Header("Agent Initalisation Properties")]
     /// Minimum positional value agent can be initialised at.
     public Vector3 MinInitPosition = new Vector3(-100f, 250f, -100f);
     /// Maximum positional value agent can be initialised at.
@@ -263,10 +265,9 @@ public class SN11Agent : Agent
      */
     void OnDrawGizmos() {
         if (!DebugMode) return;
-
-        Gizmos.color  = Color.green;
         
-        // Draw line showing agent ray cast to ground (used for gauging distance from ground).
+        // Draw ray showing agent ray cast to ground (used for gauging distance from ground).
+        Gizmos.color = Color.green;
         Gizmos.DrawRay(transform.position, Vector3.down * GetAgentDistanceFromGround());
     }
 
