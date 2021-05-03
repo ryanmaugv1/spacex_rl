@@ -45,6 +45,10 @@ public class SN11Agent : Agent
     /// Maximum positional value agent can be initialised at.
     public Vector3 MaxInitPosition = new Vector3(100f, 500f, 100f);
 
+    [Header("Agent Reward Properties")]
+    /// Max distance agent can land or crash at and get a reward (proportionate to distance).
+    public float MaxDistanceFromPad = 20f;
+
     /// Rigidbody Component belonging to agent (used for applying actions).
     private Rigidbody AgentRigidbody;
     /// Current amount of thrust produced by agent in Newtons.
@@ -432,6 +436,18 @@ public class SN11Agent : Agent
 
     /// Set thrust force within 0 to 12,000 Newtons (N) based on agent predicted continuous action.
     private void SetThrustForce(ActionBuffers actionBuffers) {}
+
+
+    #endregion
+
+
+    #region Reward Calculation Helpers
+
+
+    /// Calculate and return reward in range of (0, 1) propertionate to agent distance from landing pad.
+    private float CalculateRewardFromDistanceToLandingPad() {
+        return Mathf.Clamp(GetAgentDistanceFromLandingPad() / MaxDistanceFromPad, 0.0f, 1.0f);
+    }
 
 
     #endregion
