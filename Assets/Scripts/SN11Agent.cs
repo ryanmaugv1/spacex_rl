@@ -118,11 +118,16 @@ public class SN11Agent : Agent
         // Reset episode timeout timer.
         EpisodeTimeRemaining = EpisodeTimeout;
 
+        // Reset agent velocity and angular velocity to prevent carrying over between episodes.
+        AgentRigidbody.velocity = Vector3.zero;
+        AgentRigidbody.angularVelocity = Vector3.zero;
+
+        // Initialise agent.
         SetAgentYPosition();
         SetRandomAgentOrientation();
         SetAgentXZPosition();
-        if (DebugMode)
-            DebugLogAgentObservations();
+
+        if (DebugMode) DebugLogAgentObservations();
     }
 
 
