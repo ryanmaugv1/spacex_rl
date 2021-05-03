@@ -388,9 +388,15 @@ public class SN11Agent : Agent
     }
 
 
-    /// Check if agent has crashed (not landed upright) on pad or not.
+    /// Check if agent has crashed (not landed upright).
     private bool HasAgentCrashLanded() {
         return !IsAgentUpright() && IsAgentStationary() && AgentCollisionInfo.Colliding();
+    }
+
+
+    /// Check if agent has crashed on landing pad.
+    private bool HasAgentCrashLandedOnPad() {
+        return HasAgentCrashLanded() && AgentCollisionInfo.CheckTagExists("Landing Pad");
     }
 
 
