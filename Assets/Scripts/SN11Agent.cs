@@ -51,6 +51,8 @@ public class SN11Agent : Agent
     private float AgentThrust;
     /// Holds minimal agent collision info needed.
     private CollisionInfo AgentCollisionInfo = new CollisionInfo();
+    /// Holds current episode time remaining till timeout in seconds.
+    private float EpisodeTimeRemaining;
 
     
     // Start is called before the first frame update
@@ -91,7 +93,12 @@ public class SN11Agent : Agent
         // Debug.Log("Crashed? " + HasAgentCrashLanded());
         // Debug.Log("Out Of Range? " + IsAgentOutOfRange());
 
-        // TODO: Implement episode timeout.
+        // Episode timeout logic.
+        EpisodeTimeRemaining -= Time.deltaTime;
+        if (EpisodeTimeRemaining < 0) {
+            EndEpisode();
+            EpisodeTimeRemaining = EpisodeTimeout;
+        }
     }
 
 
@@ -108,6 +115,9 @@ public class SN11Agent : Agent
      *  so that our agent can learn a more general and robust policy.
      */
     public override void OnEpisodeBegin() {
+        // Reset episode timeout timer.
+        EpisodeTimeRemaining = EpisodeTimeout;
+
         SetAgentYPosition();
         SetRandomAgentOrientation();
         SetAgentXZPosition();
