@@ -52,12 +52,6 @@ public class SN11Agent : Agent
     /// Holds minimal agent collision info needed.
     private CollisionInfo AgentCollisionInfo = new CollisionInfo();
 
-
-    // TODO:
-    // Make the floor and landing pad a cube rather than a plane because ground ray doesn't
-    // interest when landing upright on plane. This will also fix bug where agent falls
-    // through ground as collision isn't detected on-time due to surface being too thin.
-
     
     // Start is called before the first frame update
     void Start() {
@@ -148,7 +142,9 @@ public class SN11Agent : Agent
 
 
     /**
-     *  Performing Action & Rewarding Agent
+     *  Performing Actions
+     *
+     *  Implements logic for turning agent control signals to in-game actions.
      *
      *  Our agent action are as follows:
      *      - Rotating thrust vector (x, z).
