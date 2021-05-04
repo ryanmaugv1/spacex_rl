@@ -57,6 +57,8 @@ public class SN11Agent : Agent
     private CollisionInfo AgentCollisionInfo = new CollisionInfo();
     /// Holds current episode time remaining till timeout in seconds.
     private float EpisodeTimeRemaining;
+    /// Mapping from agent states to respective reward.
+    private StateRewardMap StateRewardMap;
     /// Episode counter incremented on every OnEpisodeBegin call.
     private int EpisodeCounter = 0;
     
@@ -70,40 +72,81 @@ public class SN11Agent : Agent
 
     /**
      *  Fixed Update Loop (called before internal physics update)
+     * 
+     *  Reward agent:
+     *      - when in belly flop position (100+ metres above ground).
+     *          - +0.01 for being in (85, 95) range on z-axis.
+     *      - when in upright position (<100 metres above ground).
+     *          - +0.01 for being upright in (-5, 5) range on x and z axis.
+     *      - when landing upright (+1).
+     *      - when landing or crashing on landing pad.
+     *          - +1.0 for landing on pad.
+     *          - +0.2 for crashing on pad.
+     *      - when landing or crashing within certain distance range of pad.
+     *          - +1.0 for landing center of landing pad.
+     *          - +0.0 for landing on edge of distance range from pad (20 metres).
+     *      - when approaching ground with velocity less than 4 m/s.
+     *          - +0.01 when 20 metres above ground and velocity is less than max defined threshold.
      *
-     *  The agent rewarding logic looks like this:
-     *      - Reward in range of 0 to 1 where:
-     *          0 = Landed just outside edge of landing pad.
-     *          1 = Landed dead centre of landing pad.
-     *      - Reward in range of 0 to 0.1 where:
-     *          0 = Rocket orientation isn't within upright range.
-     *          1 = Rocket orientation is within upright range.
-     *      - Reward in range of 0 to 1 where:
-     *          0 = Touched ground at velocity greater than 5 m/s.
-     *          1 = Touched ground at velocity less than 5 m/s.
-     *          TODO: Find better MPH values that aren't so arbitrary.
+     *  Punish Agent:
+     *      - when colliding with anything other than landing pad (-0.1).
      *
-     *  Using the defined action an reward space above we should be able to
-     *  find an optimal policy for self-landing the agent rocket upright on
-     *  a designated landing pad.
+     *  End Episode:
+     *      - Agent lands upright (and doesn't move for 5 second)
+     *      - Agent crashed.
+     *      - Agent out-of-range.
+     *      - Episode timed out.
      *
-     *  We want to reset our agent if we end up in the following states:
-     *      - Agent Lands Upright (and doesn't move for 5 second)
-     *      - Agent Crashed
-     *      - Agent Out Of Range
+     *  Using the defined reward specification above we should be able to
+     *  find an optimal policy for the agent to self-land SpaceX SN style.
      */
     void FixedUpdate() {
-        // Debug.Log("Upright? " + IsAgentUpright());
-        // Debug.Log("Stationary? " + IsAgentStationary());
-        // Debug.Log("Landed? " + HasAgentLanded());
-        // Debug.Log("Landed On Pad? " + HasAgentLandedOnPad());
-        // Debug.Log("Crashed? " + HasAgentCrashLanded());
-        // Debug.Log("Out Of Range? " + IsAgentOutOfRange());
+        if (DebugMode) {
+            Debug.Log("Upright? " + IsAgentUpright());
+            Debug.Log("Stationary? " + IsAgentStationary());
+            Debug.Log("Landed? " + HasAgentLanded());
+            Debug.Log("Landed On Pad? " + HasAgentLandedOnPad());
+            Debug.Log("Crashed? " + HasAgentCrashLanded());
+            Debug.Log("Out Of Range? " + IsAgentOutOfRange());
+        }
 
         // Episode timeout logic.
         EpisodeTimeRemaining -= Time.deltaTime;
         if (EpisodeTimeRemaining < 0) {
+            Debug.Log("End Episode - Timeout!");
             EndEpisode();
+        }
+
+        if (HasAgentLandedOnPad()) {
+            Debug.Log("End Episode - Landed On Pad!");
+            AddReward(StateRewardMap.LANDED_UPRIGHT);
+            AddReward(StateRewardMap.LANDED_ON_PAD_REWARD);
+            AddReward(CalculateRewardFromDistanceToLandingPad());
+            EndEpisode();
+            return;
+        }
+
+        if (HasAgentLanded()) {
+            Debug.Log("End Episode - Landed (but not on pad)!");
+            AddReward(StateRewardMap.LANDED_UPRIGHT);
+            AddReward(CalculateRewardFromDistanceToLandingPad());
+            EndEpisode();
+            return;
+        }
+
+        if (HasAgentCrashLandedOnPad()) {
+            Debug.Log("End Episode - Crashed On Pad!");
+            AddReward(StateRewardMap.CRASHED_ON_PAD_REWARD);
+            AddReward(CalculateRewardFromDistanceToLandingPad());
+            EndEpisode();
+            return;
+        }
+
+        if (HasAgentCrashLanded()) {
+            Debug.Log("End Episode - Crashed (not on pad)!");
+            AddReward(CalculateRewardFromDistanceToLandingPad());
+            EndEpisode();
+            return;
         }
     }
 
