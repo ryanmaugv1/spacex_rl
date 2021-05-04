@@ -101,7 +101,6 @@ public class SN11Agent : Agent
         EpisodeTimeRemaining -= Time.deltaTime;
         if (EpisodeTimeRemaining < 0) {
             EndEpisode();
-            EpisodeTimeRemaining = EpisodeTimeout;
         }
     }
 
@@ -119,7 +118,7 @@ public class SN11Agent : Agent
      *  so that our agent can learn a more general and robust policy.
      */
     public override void OnEpisodeBegin() {
-        // Reset episode timeout timer.
+        // Reset episode timeout timer and increment counter.
         EpisodeTimeRemaining = EpisodeTimeout;
 
         // Reset agent velocity and angular velocity to prevent carrying over between episodes.
