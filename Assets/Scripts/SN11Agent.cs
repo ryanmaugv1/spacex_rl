@@ -57,6 +57,9 @@ public class SN11Agent : Agent
     private CollisionInfo AgentCollisionInfo = new CollisionInfo();
     /// Holds current episode time remaining till timeout in seconds.
     private float EpisodeTimeRemaining;
+    /// Episode counter incremented on every OnEpisodeBegin call.
+    private int EpisodeCounter = 0;
+    
 
     
     // Start is called before the first frame update
@@ -120,6 +123,7 @@ public class SN11Agent : Agent
     public override void OnEpisodeBegin() {
         // Reset episode timeout timer and increment counter.
         EpisodeTimeRemaining = EpisodeTimeout;
+        EpisodeCounter += 1;
 
         // Reset agent velocity and angular velocity to prevent carrying over between episodes.
         AgentRigidbody.velocity = Vector3.zero;
@@ -130,7 +134,10 @@ public class SN11Agent : Agent
         SetRandomAgentOrientation();
         SetAgentXZPosition();
 
-        if (DebugMode) DebugLogAgentObservations();
+        if (DebugMode) {
+            Debug.Log("Episode " + EpisodeCounter);
+            DebugLogAgentObservations();
+        }
     }
 
 
