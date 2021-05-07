@@ -8,7 +8,7 @@
 public class StateRewardMap {
     public static float LANDED_UPRIGHT = 1.0f;
     /// Reward given to agent when in belly flop orientation range.
-    public static float BELLY_FLOP_POSITION_REWARD = 0.01f;
+    public static float BELLY_FLOP_POSITION_REWARD = 0.0001f;
     /// Reward given to agent when in upright orientation range.
     public static float UPRIGHT_POSITION_REWARD = 0.0001f;
     /// Reward given to agent after landing on pad.

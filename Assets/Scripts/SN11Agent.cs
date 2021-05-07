@@ -48,6 +48,8 @@ public class SN11Agent : Agent
     [Header("Agent Reward Properties")]
     /// Max distance agent can land or crash at and get a reward (proportionate to distance).
     public float MaxDistanceFromPad = 20f;
+    /// Belly flop Pitch (z-axis) range agent can be within to get a reward.
+    public Vector2 BellyFlopPitchRange = new Vector2(85f, 95f);
     /// Upright Pitch (z-axis) and Yaw (x-axis) range (-range, 0, range) agent can be within to get a reward.
     public float UprightOrientationRange = 5f;
 
@@ -123,6 +125,10 @@ public class SN11Agent : Agent
 
         if (IsAgentInUprightWithinRange() && agentDistanceFromGround < 100f)
             AddReward(StateRewardMap.UPRIGHT_POSITION_REWARD);
+
+        if (IsAgentInBellyFlopOrientation() && agentDistanceFromGround > 100f) {
+            AddReward(StateRewardMap.BELLY_FLOP_POSITION_REWARD);
+        }
 
         if (HasAgentLandedOnPad()) {
             Debug.Log("End Episode - Landed On Pad!");
@@ -443,6 +449,16 @@ public class SN11Agent : Agent
         return (xNegativeRange >= -axisEpsilon || xAngle <= axisEpsilon)
             && (zNegativeRange >= -axisEpsilon || zAngle <= axisEpsilon);
     }
+
+    /// Check if agent is within specified belly flop orientation range.
+    private bool IsAgentInBellyFlopOrientation() {
+        float rollEpsilon = 5f;
+        float zAngle = transform.eulerAngles.z;
+        float xAngle = transform.eulerAngles.x;
+        float xNegativeRange = xAngle - 360f;
+        bool validRoll = xNegativeRange >= -rollEpsilon || xAngle <= rollEpsilon;
+        bool validPitch = zAngle >= BellyFlopPitchRange.x && zAngle <= BellyFlopPitchRange.y;
+        return validRoll && validPitch;
     }
 
 
