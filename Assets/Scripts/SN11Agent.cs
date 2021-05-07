@@ -48,6 +48,8 @@ public class SN11Agent : Agent
     [Header("Agent Reward Properties")]
     /// Max distance agent can land or crash at and get a reward (proportionate to distance).
     public float MaxDistanceFromPad = 20f;
+    /// Upright Pitch (z-axis) and Yaw (x-axis) range (-range, 0, range) agent can be within to get a reward.
+    public float UprightOrientationRange = 5f;
 
     /// Rigidbody Component belonging to agent (used for applying actions).
     private Rigidbody AgentRigidbody;
@@ -116,6 +118,11 @@ public class SN11Agent : Agent
             Debug.Log("End Episode - Timeout!");
             EndEpisode();
         }
+
+        float agentDistanceFromGround = GetAgentDistanceFromGround();
+
+        if (IsAgentInUprightWithinRange() && agentDistanceFromGround < 100f)
+            AddReward(StateRewardMap.UPRIGHT_POSITION_REWARD);
 
         if (HasAgentLandedOnPad()) {
             Debug.Log("End Episode - Landed On Pad!");
@@ -415,16 +422,27 @@ public class SN11Agent : Agent
     #region Agent State Checkers
 
 
-    // TODO: 
-    // Do we want a IsAgentUprightWithinRange(Vector3 range) method for rewarding
-    // agent on stabilising to upright-ish orientation during flight?
+    /// Check if agent is within specified upright orientation range.
+    private bool IsAgentInUprightWithinRange() {
+        float xAngle = transform.eulerAngles.x;
+        float zAngle = transform.eulerAngles.z;
+        float xNegativeRange = xAngle - 360f;
+        float zNegativeRange = zAngle - 360f;
+        return (xNegativeRange >= -UprightOrientationRange || xAngle <= UprightOrientationRange)
+            && (zNegativeRange >= -UprightOrientationRange || zAngle <= UprightOrientationRange);
+    }
 
 
     /// Check if agent (x, z) axis rotations are both within range (-ε >= 0.0 <= ε).
     private bool IsAgentUpright() {
         float axisEpsilon = 0.01f;
-        return transform.eulerAngles.x >= -axisEpsilon && transform.eulerAngles.x <= axisEpsilon
-            && transform.eulerAngles.z >= -axisEpsilon && transform.eulerAngles.z <= axisEpsilon;
+        float xAngle = transform.eulerAngles.x;
+        float zAngle = transform.eulerAngles.z;
+        float xNegativeRange = xAngle - 360f;
+        float zNegativeRange = zAngle - 360f;
+        return (xNegativeRange >= -axisEpsilon || xAngle <= axisEpsilon)
+            && (zNegativeRange >= -axisEpsilon || zAngle <= axisEpsilon);
+    }
     }
 
 
