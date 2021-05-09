@@ -565,11 +565,8 @@ public class SN11Agent : Agent
 
 
     /// Returns true if W, A, S, or D key is currently being held down.    
-    private IsWASDKeyDown() {
-        return Input.GetKey(KeyCode.W) 
-            || Input.GetKey(KeyCode.A) 
-            || Input.GetKey(KeyCode.S) 
-            || Input.GetKey(KeyCode.D);
+    private bool IsWASDKeyDown() {
+        return Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D);
     }
 
     #endregion
