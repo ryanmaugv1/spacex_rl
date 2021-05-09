@@ -206,9 +206,9 @@ public class SN11Agent : Agent
         AgentRigidbody.angularVelocity = Vector3.zero;
 
         // Initialise agent.
-        // SetAgentYPosition();
-        // SetRandomAgentOrientation();
-        // SetAgentXZPosition();
+        SetAgentYPosition();
+        SetRandomAgentOrientation();
+        SetAgentXZPosition();
 
         if (DebugLogMode) {
             Debug.Log("Episode " + EpisodeCounter);
