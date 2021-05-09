@@ -387,6 +387,10 @@ public class SN11Agent : Agent
     private Vector3 GetAgentVelocity() => AgentRigidbody.velocity;
 
 
+    /// Return agent speed which is just the magnutide of the velocity vector.
+    private float GetAgentSpeed() => AgentRigidbody.velocity.magnitude;
+
+
     /// Return agent distance from ground below in metres (else -1 if no ground below).
     private float GetAgentDistanceFromGround() {
         RaycastHit hit;
@@ -463,10 +467,9 @@ public class SN11Agent : Agent
     }
 
 
-    /// Check if agent velocity and angular velocity on all axis is 0.0f.
+    /// Check if agent speed is 0.0f and angular velocity on all axis is 0.0f.
     private bool IsAgentStationary() {
-        return AgentRigidbody.velocity == new Vector3(0.0f, 0.0f, 0.0f)
-            && AgentRigidbody.angularVelocity == new Vector3(0.0f, 0.0f, 0.0f);
+        return GetAgentSpeed() == 0f && GetAgentAngularVelocity() == new Vector3(0.0f, 0.0f, 0.0f);
     }
 
 
@@ -545,6 +548,7 @@ public class SN11Agent : Agent
         Debug.Log("===================== AGENT DATA =====================");
         Debug.Log("Agent Orientation: " + GetAgentOrientation());
         Debug.Log("Agent Velocity: " + GetAgentVelocity());
+        Debug.Log("Agent Speed: " + GetAgentSpeed());
         Debug.Log("Agent Distance From Landing Pad: " + GetAgentPositionRelativeToLandingPad());
         Debug.Log("Agent Distance From Ground: " + GetAgentDistanceFromGround());
         Debug.Log("Agent Angular Velocity: " + GetAgentAngularVelocity());
