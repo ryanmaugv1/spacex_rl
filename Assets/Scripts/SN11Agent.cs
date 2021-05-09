@@ -128,6 +128,7 @@ public class SN11Agent : Agent
         if (EpisodeTimeRemaining < 0) {
             Debug.Log("End Episode - Timeout!");
             EndEpisode();
+            return;
         }
 
         float agentDistanceFromGround = GetAgentDistanceFromGround();
@@ -205,9 +206,9 @@ public class SN11Agent : Agent
         AgentRigidbody.angularVelocity = Vector3.zero;
 
         // Initialise agent.
-        SetAgentYPosition();
-        SetRandomAgentOrientation();
-        SetAgentXZPosition();
+        // SetAgentYPosition();
+        // SetRandomAgentOrientation();
+        // SetAgentXZPosition();
 
         if (DebugLogMode) {
             Debug.Log("Episode " + EpisodeCounter);
@@ -490,9 +491,9 @@ public class SN11Agent : Agent
     }
 
 
-    /// Check if agent speed is 0.0f and angular velocity on all axis is 0.0f.
+    /// Check if agent speed is zero.
     private bool IsAgentStationary() {
-        return GetAgentSpeed() == 0f && GetAgentAngularVelocity() == new Vector3(0.0f, 0.0f, 0.0f);
+        return GetAgentSpeed() < /*epsilon=*/ 0.001f;
     }
 
 
