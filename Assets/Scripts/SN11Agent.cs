@@ -332,6 +332,10 @@ public class SN11Agent : Agent
         AgentCollisionInfo.AddCollision(collision.gameObject.tag);
         if (DebugMode) 
             AgentCollisionInfo.DebugLogState();
+
+        // Penalty given to agent when landing or crashing off pad.
+        if (collision.gameObject.tag != "Landing Pad")
+            AddReward(StateRewardMap.LANDED_OR_CRASHED_OFF_PAD_PENALTY);
     }
 
 
