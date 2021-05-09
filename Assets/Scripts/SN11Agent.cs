@@ -52,6 +52,12 @@ public class SN11Agent : Agent
     public Vector2 BellyFlopPitchRange = new Vector2(85f, 95f);
     /// Upright Pitch (z-axis) and Yaw (x-axis) range (-range, 0, range) agent can be within to get a reward.
     public float UprightOrientationRange = 5f;
+    /// Maximum approach speed agent can have to get a reward.
+    public float MaxApproachSpeed = 4f;
+    /// Maximum height which is considered as the "approach" height.
+    public float MaxApproachDistance = 25f;
+    /// Minimum height which is considered as the "approach" height.
+    public float MinApproachDistance = 5f;
 
     /// Rigidbody Component belonging to agent (used for applying actions).
     private Rigidbody AgentRigidbody;
@@ -128,6 +134,14 @@ public class SN11Agent : Agent
 
         if (IsAgentInBellyFlopOrientation() && agentDistanceFromGround > 100f) {
             AddReward(StateRewardMap.BELLY_FLOP_POSITION_REWARD);
+        }
+
+        // Reward agent for being below max appraoch speed when in approach distance range.
+        if (GetAgentSpeed() < MaxApproachSpeed 
+            && agentDistanceFromGround > MinApproachDistance
+            && agentDistanceFromGround < MaxApproachDistance) {
+            Debug.Log("BELOW SPEED THRESHOLD ON APPROACH!");
+            AddReward(StateRewardMap.APPROACHING_SPEED_REWARD);
         }
 
         if (HasAgentLandedOnPad()) {
