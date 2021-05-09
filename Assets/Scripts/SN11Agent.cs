@@ -23,8 +23,10 @@ using Unity.MLAgents.Actuators;
 public class SN11Agent : Agent
 {
     [Header("Environment Properties")]
-    /// Enable debug features like logging and ray drawing.
-    public bool DebugMode;
+    /// Enable debug logs in console of agent data.
+    public bool DebugLogMode;
+    /// Enable debug gizmos for agent.
+    public bool DebugVisualMode;
     /// Time in seconds before we timeout episode because agent took too long to complete episode.
     public int EpisodeTimeout = 120;
     /// Defines out-of-range distance (both direction) for each rocket axis relative to landing pad.
@@ -112,7 +114,7 @@ public class SN11Agent : Agent
      *  find an optimal policy for the agent to self-land SpaceX SN style.
      */
     void FixedUpdate() {
-        if (DebugMode) {
+        if (DebugLogMode) {
             Debug.Log("Upright? " + IsAgentUpright());
             Debug.Log("Stationary? " + IsAgentStationary());
             Debug.Log("Landed? " + HasAgentLanded());
@@ -207,7 +209,7 @@ public class SN11Agent : Agent
         SetRandomAgentOrientation();
         SetAgentXZPosition();
 
-        if (DebugMode) {
+        if (DebugLogMode) {
             Debug.Log("Episode " + EpisodeCounter);
             DebugLogAgentObservations();
         }
@@ -262,7 +264,7 @@ public class SN11Agent : Agent
         // TODO: Show control signals in UI.
         // TODO: Display thurst fire VFX when thrust force is not 0.
 
-        if (DebugMode) {
+        if (DebugLogMode) {
             Debug.Log("Thrust X Control Signal: " + xThrustVecControlSignal);
             Debug.Log("Thrust Z Control Signal: " + zThrustVecControlSignal);
             Debug.Log("Thrust Control Signal: "   + thrustControlSignal);
@@ -333,7 +335,7 @@ public class SN11Agent : Agent
      */
     void OnCollisionEnter(Collision collision) {
         AgentCollisionInfo.AddCollision(collision.gameObject.tag);
-        if (DebugMode) 
+        if (DebugLogMode) 
             AgentCollisionInfo.DebugLogState();
 
         // Penalty given to agent when landing or crashing off pad.
@@ -350,7 +352,7 @@ public class SN11Agent : Agent
      */
     void OnCollisionExit(Collision collision) {
         AgentCollisionInfo.RemoveCollision(collision.gameObject.tag);
-        if (DebugMode) 
+        if (DebugLogMode) 
             AgentCollisionInfo.DebugLogState();
     }
     
@@ -362,11 +364,11 @@ public class SN11Agent : Agent
      *  elements e.g. distance rays.
      */
     void OnDrawGizmos() {
-        if (!DebugMode) return;
+        if (!DebugVisualMode) return;
         
         // Draw ray showing agent ray cast to ground (used for gauging distance from ground).
         Gizmos.color = Color.green;
-        Gizmos.DrawRay(transform.position, Vector3.down * GetAgentDistanceFromGround());
+        Gizmos.DrawRay(transform.position + new Vector3(0f, 0.1f, 0f), Vector3.down * GetAgentDistanceFromGround());
     }
 
 
