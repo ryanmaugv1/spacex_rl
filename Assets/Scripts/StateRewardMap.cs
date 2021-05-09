@@ -16,7 +16,7 @@ public class StateRewardMap {
     /// Reward given to agent after crashing on pad.
     public static float CRASHED_ON_PAD_REWARD = 0.2f;
     /// Reward given to agent when approaching speed is below max approach speed.
-    public static float APPROACHING_SPEED_REWARD = 0.001f;
+    public static float APPROACHING_SPEED_REWARD = 0.0001f;
     /// Penalty given to agent when landing or crashing off pad.
     public static float LANDED_OR_CRASHED_OFF_PAD_PENALTY = -0.25f;
 }
