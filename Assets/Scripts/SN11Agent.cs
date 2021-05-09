@@ -14,6 +14,7 @@ using Unity.MLAgents.Actuators;
  *
  *  TODO:
  *      - Create a different version with fuel limits (no unlimited thrust).
+ *      - Create a different version with cold has thrusters to help orient rocket.
  *      - Create a different version with fins (air drag) and TVC.
  *      - Create a different version with fins, TVC & deployable landing legs.
  *
@@ -85,9 +86,9 @@ public class SN11Agent : Agent
      * 
      *  Reward agent:
      *      - when in belly flop position (100+ metres above ground).
-     *          - +0.01 for being in (85, 95) range on z-axis.
+     *          - +0.0001 for being in (85, 95) range on z-axis.
      *      - when in upright position (<100 metres above ground).
-     *          - +0.01 for being upright in (-5, 5) range on x and z axis.
+     *          - +0.0001 for being upright in (-5, 5) range on x and z axis.
      *      - when landing upright (+1).
      *      - when landing or crashing on landing pad.
      *          - +1.0 for landing on pad.
@@ -95,8 +96,8 @@ public class SN11Agent : Agent
      *      - when landing or crashing within certain distance range of pad.
      *          - +1.0 for landing center of landing pad.
      *          - +0.0 for landing on edge of distance range from pad (20 metres).
-     *      - when approaching ground with velocity less than 4 m/s.
-     *          - +0.01 when 20 metres above ground and velocity is less than max defined threshold.
+     *      - when approaching ground with speed less than 4 m/s.
+     *          - +0.001 when 25 metres above ground and speed is less than max defined threshold.
      *
      *  Punish Agent:
      *      - when colliding with anything other than landing pad (-0.1).
@@ -129,9 +130,11 @@ public class SN11Agent : Agent
 
         float agentDistanceFromGround = GetAgentDistanceFromGround();
 
+        // Reward agent for being in upright position when 100 metres or less from ground.
         if (IsAgentInUprightWithinRange() && agentDistanceFromGround < 100f)
             AddReward(StateRewardMap.UPRIGHT_POSITION_REWARD);
 
+        // Reward agent for being in belly flop position when 100 metres or less from ground.
         if (IsAgentInBellyFlopOrientation() && agentDistanceFromGround > 100f) {
             AddReward(StateRewardMap.BELLY_FLOP_POSITION_REWARD);
         }
