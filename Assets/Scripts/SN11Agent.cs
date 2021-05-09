@@ -313,11 +313,7 @@ public class SN11Agent : Agent
 
         // Set thrust force if W, A, S, D or SPACE is pressed.
         float thrustForce = 0f;
-        if (Input.GetKey(KeyCode.W) 
-            || Input.GetKey(KeyCode.A) 
-            || Input.GetKey(KeyCode.S) 
-            || Input.GetKey(KeyCode.D)
-            || Input.GetKey(KeyCode.Space))
+        if (IsWASDKeyDown() || Input.GetKey(KeyCode.Space))
             thrustForce = 6000f;
         
         // Populate continuous action buffer with actions derived from input.
@@ -426,15 +422,11 @@ public class SN11Agent : Agent
 
 
     /// Return agent distance from landing pad.
-    private float GetAgentDistanceFromLandingPad() {
-        return Vector3.Distance(transform.position, LandingPad.position);
-    }
+    private float GetAgentDistanceFromLandingPad() => Vector3.Distance(transform.position, LandingPad.position);
 
 
     /// Return agent relative position from landing pad.
-    private Vector3 GetAgentPositionRelativeToLandingPad() {
-        return transform.position - LandingPad.position;
-    }
+    private Vector3 GetAgentPositionRelativeToLandingPad() => transform.position - LandingPad.position;
 
 
     /// Return agent angular velocity (x, y, z respectively).
@@ -492,9 +484,7 @@ public class SN11Agent : Agent
 
 
     /// Check if agent speed is zero.
-    private bool IsAgentStationary() {
-        return GetAgentSpeed() < /*epsilon=*/ 0.001f;
-    }
+    private bool IsAgentStationary() => GetAgentSpeed() < /*epsilon=*/ 0.001f;
 
 
     /// Check if agent has landed defined as being upright, stationary and colliding.
@@ -538,20 +528,6 @@ public class SN11Agent : Agent
     #endregion
 
 
-    #region Agent Action Helpers
-
-
-    /// Set thrust vector orientation (x, z) based on agent predicted continuous actions.
-    private void SetThrusterOrientation(ActionBuffers actionBuffers) {}
-
-
-    /// Set thrust force within 0 to 12,000 Newtons (N) based on agent predicted continuous action.
-    private void SetThrustForce(ActionBuffers actionBuffers) {}
-
-
-    #endregion
-
-
     #region Reward Calculation Helpers
 
 
@@ -581,6 +557,20 @@ public class SN11Agent : Agent
         Debug.Log("=======================================================");
     }
 
+
+    #endregion
+
+
+    #region Code Helpers
+
+
+    /// Returns true if W, A, S, or D key is currently being held down.    
+    private IsWASDKeyDown() {
+        return Input.GetKey(KeyCode.W) 
+            || Input.GetKey(KeyCode.A) 
+            || Input.GetKey(KeyCode.S) 
+            || Input.GetKey(KeyCode.D);
+    }
 
     #endregion
 }
