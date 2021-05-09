@@ -390,7 +390,8 @@ public class SN11Agent : Agent
     /// Return agent distance from ground below in metres (else -1 if no ground below).
     private float GetAgentDistanceFromGround() {
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, Vector3.down, out hit, Mathf.Infinity))
+        Vector3 rayOriginPosition = transform.position + new Vector3(0f, 0.1f, 0f);
+        if (Physics.Raycast(rayOriginPosition, Vector3.down, out hit, Mathf.Infinity))
             return hit.distance;
         return -1;
     }
