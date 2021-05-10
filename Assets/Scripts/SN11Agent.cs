@@ -72,8 +72,6 @@ public class SN11Agent : Agent
     private float EpisodeTimeRemaining;
     /// Mapping from agent states to respective reward.
     private StateRewardMap StateRewardMap;
-    /// Episode counter incremented on every OnEpisodeBegin call.
-    private int EpisodeCounter = 0;
     
 
     
@@ -199,7 +197,6 @@ public class SN11Agent : Agent
     public override void OnEpisodeBegin() {
         // Reset episode timeout timer and increment counter.
         EpisodeTimeRemaining = EpisodeTimeout;
-        EpisodeCounter += 1;
 
         // Reset agent velocity and angular velocity to prevent carrying over between episodes.
         AgentRigidbody.velocity = Vector3.zero;
@@ -211,7 +208,7 @@ public class SN11Agent : Agent
         SetAgentXZPosition();
 
         if (DebugLogMode) {
-            Debug.Log("Episode " + EpisodeCounter);
+            Debug.Log("Iteration: " + StepCount);
             DebugLogAgentObservations();
         }
     }
