@@ -12,12 +12,6 @@ using Unity.MLAgents.Actuators;
  *  first stage of Starship rocket. This agent is trained to self-land on 
  *  a designated landing pad using Thrust Vector Control (TVC).
  *
- *  TODO:
- *      - Create a different version with fuel limits (no unlimited thrust).
- *      - Create a different version with cold has thrusters to help orient rocket.
- *      - Create a different version with fins (air drag) and TVC.
- *      - Create a different version with fins, TVC & deployable landing legs.
- *
  *  Authored By Ryan Maugin (@ryanmaugv1)
  */
 public class SN11Agent : Agent
