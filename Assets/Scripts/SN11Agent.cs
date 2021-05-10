@@ -30,7 +30,7 @@ public class SN11Agent : Agent
     /// Time in seconds before we timeout episode because agent took too long to complete episode.
     public int EpisodeTimeout = 120;
     /// Defines out-of-range distance (both direction) for each rocket axis relative to landing pad.
-    public Vector3 OutOfRangeDistance = new Vector3(2000f, 2000f, 2000f);
+    public Vector3 OutOfRangeDistance = new Vector3(10000f, 10000f, 10000f);
     /// Landing pad transform used for relative positioning of rocket and reward calculation.
     public Transform LandingPad;
 
@@ -44,9 +44,9 @@ public class SN11Agent : Agent
 
     [Header("Agent Initalisation Properties")]
     /// Minimum positional value agent can be initialised at.
-    public Vector3 MinInitPosition = new Vector3(-100f, 250f, -100f);
+    public Vector3 MinInitPosition = new Vector3(-100f, 1000f, -100f);
     /// Maximum positional value agent can be initialised at.
-    public Vector3 MaxInitPosition = new Vector3(100f, 500f, 100f);
+    public Vector3 MaxInitPosition = new Vector3(100f, 2000f, 100f);
 
     [Header("Agent Reward Properties")]
     /// Max distance agent can land or crash at and get a reward (proportionate to distance).
@@ -132,11 +132,11 @@ public class SN11Agent : Agent
         float agentDistanceFromGround = GetAgentDistanceFromGround();
 
         // Reward agent for being in upright position when 100 metres or less from ground.
-        if (IsAgentInUprightWithinRange() && agentDistanceFromGround < 100f)
+        if (IsAgentInUprightWithinRange() && agentDistanceFromGround < 500f)
             AddReward(StateRewardMap.UPRIGHT_POSITION_REWARD);
 
         // Reward agent for being in belly flop position when 100 metres or less from ground.
-        if (IsAgentInBellyFlopOrientation() && agentDistanceFromGround > 100f) {
+        if (IsAgentInBellyFlopOrientation() && agentDistanceFromGround > 500f) {
             AddReward(StateRewardMap.BELLY_FLOP_POSITION_REWARD);
         }
 
