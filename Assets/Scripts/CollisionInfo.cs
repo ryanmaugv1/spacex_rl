@@ -11,9 +11,9 @@ using UnityEngine;
  */
 public class CollisionInfo {
     /// Number of current collisions with object.
-    public int CollisionCount = 0;
+    private int CollisionCount;
     /// Tag of objects we are colliding with (duplicates allowed).
-    public List<string> CollisionTags = new List<string>();
+    private List<string> CollisionTags = new List<string>();
 
     
     /// Add new collision information.
@@ -29,7 +29,7 @@ public class CollisionInfo {
     }
 
     /// Return whether we are colliding with any objects.
-    public bool Colliding() => CollisionCount == 0 ? false : true;
+    public bool Colliding() => CollisionCount != 0;
 
     /// Return whether tag exists in collision tags list.
     public bool CheckTagExists(string tag) => CollisionTags.Exists(ctag => ctag == tag);

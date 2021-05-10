@@ -70,7 +70,7 @@ public class SN11Agent : Agent
 
     
     // Start is called before the first frame update
-    void Start() {
+    private void Start() {
         AgentRigidbody = GetComponent<Rigidbody>();
     }
 
@@ -81,7 +81,7 @@ public class SN11Agent : Agent
      *  Reward agent:
      *      - when in belly flop position (100+ metres above ground).
      *          - +0.0001 for being in (85, 95) range on z-axis.
-     *      - when in upright position (<100 metres above ground).
+     *      - when in upright position (+100 metres above ground).
      *          - +0.0001 for being upright in (-5, 5) range on x and z axis.
      *      - when landing upright (+1).
      *      - when landing or crashing on landing pad.
@@ -105,7 +105,7 @@ public class SN11Agent : Agent
      *  Using the defined reward specification above we should be able to
      *  find an optimal policy for the agent to self-land SpaceX SN style.
      */
-    void FixedUpdate() {
+    private void FixedUpdate() {
         if (DebugLogMode) {
             Debug.Log("Upright? " + IsAgentUpright());
             Debug.Log("Stationary? " + IsAgentStationary());
@@ -321,13 +321,13 @@ public class SN11Agent : Agent
      *  Extracts bare-minimal collision information needed by agent into
      *  an agent collision info structure.
      */
-    void OnCollisionEnter(Collision collision) {
+    private void OnCollisionEnter(Collision collision) {
         AgentCollisionInfo.AddCollision(collision.gameObject.tag);
         if (DebugLogMode) 
             AgentCollisionInfo.DebugLogState();
 
         // Penalty given to agent when landing or crashing off pad.
-        if (collision.gameObject.tag != "Landing Pad")
+        if (collision.gameObject.CompareTag("Landing Pad"))
             AddReward(StateRewardMap.LANDED_OR_CRASHED_OFF_PAD_PENALTY);
     }
 
@@ -338,7 +338,7 @@ public class SN11Agent : Agent
      *  Updates agent collision information to remove collision info for
      *  object we just exited collision with.
      */
-    void OnCollisionExit(Collision collision) {
+    private void OnCollisionExit(Collision collision) {
         AgentCollisionInfo.RemoveCollision(collision.gameObject.tag);
         if (DebugLogMode) 
             AgentCollisionInfo.DebugLogState();
@@ -351,7 +351,7 @@ public class SN11Agent : Agent
      *  Draws all agent gizmos that aids with visually debugging of non-visual
      *  elements e.g. distance rays.
      */
-    void OnDrawGizmos() {
+    private void OnDrawGizmos() {
         if (!DebugVisualMode) return;
         
         // Draw ray showing agent ray cast to ground (used for gauging distance from ground).
@@ -404,9 +404,8 @@ public class SN11Agent : Agent
 
     /// Return agent distance from ground below in metres (else -1 if no ground below).
     private float GetAgentDistanceFromGround() {
-        RaycastHit hit;
         Vector3 rayOriginPosition = transform.position + new Vector3(0f, 0.1f, 0f);
-        if (Physics.Raycast(rayOriginPosition, Vector3.down, out hit, Mathf.Infinity))
+        if (Physics.Raycast(rayOriginPosition, Vector3.down, out var hit, Mathf.Infinity))
             return hit.distance;
         return -1;
     }
@@ -556,7 +555,7 @@ public class SN11Agent : Agent
 
 
     /// Returns true if W, A, S, or D key is currently being held down.    
-    private bool IsWASDKeyDown() {
+    private static bool IsWASDKeyDown() {
         return Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D);
     }
 
