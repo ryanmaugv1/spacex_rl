@@ -31,6 +31,8 @@ public class SN11Agent : Agent
     [Header("Agent Thruster Properties")]
     /// Agent thruster transform used for applying force at position for rocket.
     public Transform ThrustVector;
+    /// Agent thruster particle system (VFX).
+    public ParticleSystem ThrustVFX;
     /// Maximum thrust force (Newtons) that can be outputted by from thruster.
     public float MaxThrustForce = 12000f;
     /// Maximum thruster gimbal in any direction e.g. (30f, 0f, 30f) or (-30f, 0f, -30f).
@@ -254,7 +256,15 @@ public class SN11Agent : Agent
         thrustControlSignal     = Mathf.Clamp(thrustControlSignal, 0f, MaxThrustForce);
 
         // TODO: Show control signals in UI.
-        // TODO: Display thurst fire VFX when thrust force is not 0.
+        // TODO: Find best way to orient Thrust VFX based on thruster orientation.
+        
+        // Display thrust fire VFX when thrust force control signal is not 0.
+        if (thrustControlSignal != 0f) {
+            ThrustVFX.Play();
+        } else {
+            ThrustVFX.Clear();
+            ThrustVFX.Stop();
+        }
 
         if (DebugLogMode) {
             Debug.Log("Thrust X Control Signal: " + xThrustVecControlSignal);
@@ -269,7 +279,7 @@ public class SN11Agent : Agent
         Vector3 thrusterOrientationOffset = new Vector3(xThrustVecControlSignal, 0f, zThrustVecControlSignal);
         Vector3 newThrusterOrientation = ThrustVector.eulerAngles + thrusterOrientationOffset;
         ThrustVector.rotation = Quaternion.Euler(newThrusterOrientation);
-    
+
         // Apply force to agent at thruster position in direction of thruster.
         Vector3 thrustDirection = ThrustVector.up;
         AgentRigidbody.AddForceAtPosition(thrustDirection * thrustControlSignal,  ThrustVector.position);
