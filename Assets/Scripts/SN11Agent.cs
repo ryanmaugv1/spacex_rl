@@ -277,8 +277,8 @@ public class SN11Agent : Agent
 
         // Update thrust vector orientation relative to agents based on control signals.
         Vector3 thrusterOrientationOffset = new Vector3(xThrustVecControlSignal, 0f, zThrustVecControlSignal);
-        Vector3 newThrusterOrientation = ThrustVector.eulerAngles + thrusterOrientationOffset;
-        ThrustVector.rotation = Quaternion.Euler(newThrusterOrientation);
+        Vector3 newThrusterOrientation = ThrustVector.localEulerAngles + thrusterOrientationOffset;
+        ThrustVector.localRotation = Quaternion.Euler(newThrusterOrientation);
 
         // Apply force to agent at thruster position in direction of thruster.
         Vector3 thrustDirection = ThrustVector.up;
