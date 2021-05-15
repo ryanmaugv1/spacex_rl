@@ -33,6 +33,8 @@ public class SN11Agent : Agent
     public Transform ThrustVector;
     /// Agent thruster particle system (VFX).
     public ParticleSystem ThrustVFX;
+
+    public Transform ThrustVFXTransform;
     /// Maximum thrust force (Newtons) that can be outputted by from thruster.
     public float MaxThrustForce = 12000f;
     /// Maximum thruster gimbal in any direction e.g. (30f, 0f, 30f) or (-30f, 0f, -30f).
@@ -256,8 +258,8 @@ public class SN11Agent : Agent
         thrustControlSignal     = Mathf.Clamp(thrustControlSignal, 0f, MaxThrustForce);
 
         // TODO: Show control signals in UI.
-        // TODO: Find best way to orient Thrust VFX based on thruster orientation.
-        
+        // TODO: Find best way to scale Thrust VFX size based on thruster force.
+
         // Display thrust fire VFX when thrust force control signal is not 0.
         if (thrustControlSignal != 0f) {
             ThrustVFX.Play();
@@ -279,6 +281,9 @@ public class SN11Agent : Agent
         Vector3 thrusterOrientationOffset = new Vector3(xThrustVecControlSignal, 0f, zThrustVecControlSignal);
         Vector3 newThrusterOrientation = ThrustVector.localEulerAngles + thrusterOrientationOffset;
         ThrustVector.localRotation = Quaternion.Euler(newThrusterOrientation);
+        
+        // Also update Thrust VFX orientation to match thrust vectors.
+        ThrustVFXTransform.localRotation = ThrustVector.localRotation;
 
         // Apply force to agent at thruster position in direction of thruster.
         Vector3 thrustDirection = ThrustVector.up;
