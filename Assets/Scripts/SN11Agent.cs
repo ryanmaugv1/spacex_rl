@@ -142,7 +142,6 @@ public class SN11Agent : Agent
         if (GetAgentSpeed() < MaxApproachSpeed 
             && agentDistanceFromGround > MinApproachDistance
             && agentDistanceFromGround < MaxApproachDistance) {
-            Debug.Log("BELOW SPEED THRESHOLD ON APPROACH!");
             AddReward(StateRewardMap.APPROACHING_SPEED_REWARD);
         }
 
