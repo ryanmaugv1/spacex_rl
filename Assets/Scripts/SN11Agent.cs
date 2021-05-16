@@ -8,7 +8,7 @@ using Unity.MLAgents.Actuators;
 /**
  *  SpaceX's SN-11 Starship Rocket Agent
  *
- *  Agent modelled after SpaceX's SN series (SN-11 to be specifc) used as
+ *  Agent modelled after SpaceX's SN series (SN-11 to be specific) used as
  *  first stage of Starship rocket. This agent is trained to self-land on 
  *  a designated landing pad using Thrust Vector Control (TVC).
  *
@@ -138,7 +138,7 @@ public class SN11Agent : Agent
             AddReward(StateRewardMap.BELLY_FLOP_POSITION_REWARD);
         }
 
-        // Reward agent for being below max appraoch speed when in approach distance range.
+        // Reward agent for being below max approach speed when in approach distance range.
         if (GetAgentSpeed() < MaxApproachSpeed 
             && agentDistanceFromGround > MinApproachDistance
             && agentDistanceFromGround < MaxApproachDistance) {
@@ -182,7 +182,7 @@ public class SN11Agent : Agent
     /**
      *  Initializing & Resetting Agent On Episode Begin
      *
-     *  We will initialise/reset our agent in the followng state:
+     *  We will initialise/reset our agent in the following state:
      *      1) Set Y-axis transform position within 250-500CM range relative to landing pad y-axis.
      *      2) Set X & Z axis transform position within 50-100CM radius relative to landing pad.
      *          - Prevents positioning of agent directly above landing pad.
@@ -412,7 +412,7 @@ public class SN11Agent : Agent
     private Vector3 GetAgentVelocity() => AgentRigidbody.velocity;
 
 
-    /// Return agent speed which is just the magnutide of the velocity vector.
+    /// Return agent speed which is just the magnitude of the velocity vector.
     private float GetAgentSpeed() => AgentRigidbody.velocity.magnitude;
 
 
@@ -535,7 +535,7 @@ public class SN11Agent : Agent
     #region Reward Calculation Helpers
 
 
-    /// Calculate and return reward in range of (0, 1) propertionate to agent distance from landing pad.
+    /// Calculate and return reward in range of (0, 1) proportionate to agent distance from landing pad.
     private float CalculateRewardFromDistanceToLandingPad() {
         return Mathf.Clamp(GetAgentDistanceFromLandingPad() / MaxDistanceFromPad, 0.0f, 1.0f);
     }
