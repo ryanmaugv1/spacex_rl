@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using Unity.MLAgents;
 using Unity.MLAgents.Sensors;
@@ -27,6 +28,8 @@ public class SN11Agent : Agent
     public Vector3 OutOfRangeDistance = new Vector3(10000f, 10000f, 10000f);
     /// Landing pad transform used for relative positioning of rocket and reward calculation.
     public Transform LandingPad;
+    /// Iteration counter label we want to update with step count.
+    public TMP_Text InterationCounter;
 
     [Header("Agent Thruster Properties")]
     /// Agent thruster transform used for applying force at position for rocket.
@@ -198,6 +201,9 @@ public class SN11Agent : Agent
         // Reset agent velocity and angular velocity to prevent carrying over between episodes.
         AgentRigidbody.velocity = Vector3.zero;
         AgentRigidbody.angularVelocity = Vector3.zero;
+        
+        // Update iteration counter.
+        InterationCounter.text = CompletedEpisodes.ToString();
 
         // Initialise agent.
         SetAgentYPosition();
