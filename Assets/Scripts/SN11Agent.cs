@@ -200,7 +200,7 @@ public class SN11Agent : Agent
 
         // Reset agent velocity and angular velocity to prevent carrying over between episodes.
         AgentRigidbody.velocity = Vector3.zero;
-        AgentRigidbody.angularVelocity = Vector3.zero;
+        AgentRigidbody.angularVelocity = new Vector3(0.1f, 0f, 0.1f);
         
         // Update iteration counter.
         InterationCounter.text = CompletedEpisodes.ToString();
