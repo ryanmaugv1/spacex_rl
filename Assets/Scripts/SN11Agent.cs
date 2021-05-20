@@ -202,8 +202,8 @@ public class SN11Agent : Agent
         AgentRigidbody.velocity = Vector3.zero;
         AgentRigidbody.angularVelocity = new Vector3(0.1f, 0f, 0.1f);
         
-        // Update iteration counter.
-        InterationCounter.text = CompletedEpisodes.ToString();
+        // Increment iteration counter (support multi-agent env by incrementing text value).
+        InterationCounter.text = (int.Parse(InterationCounter.text) + 1).ToString();
 
         // Initialise agent.
         SetAgentYPosition();
@@ -211,7 +211,7 @@ public class SN11Agent : Agent
         SetAgentXZPosition();
 
         if (DebugLogMode) {
-            Debug.Log("Iteration: " + StepCount);
+            Debug.Log("Iteration: " + InterationCounter.text);
             DebugLogAgentObservations();
         }
     }
