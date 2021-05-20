@@ -199,7 +199,7 @@ public class SN11Agent : Agent
         EpisodeTimeRemaining = EpisodeTimeout;
 
         // Reset agent velocity and angular velocity to prevent carrying over between episodes.
-        AgentRigidbody.velocity = Vector3.zero;
+        AgentRigidbody.velocity = new Vector3(0.1f, 0.1f, 0.1f);
         AgentRigidbody.angularVelocity = new Vector3(0.1f, 0f, 0.1f);
         
         // Increment iteration counter (support multi-agent env by incrementing text value).
