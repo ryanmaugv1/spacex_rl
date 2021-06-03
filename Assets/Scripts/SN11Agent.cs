@@ -508,7 +508,7 @@ public class SN11Agent : Agent
 
 
     /// Check if agent speed is zero.
-    private bool IsAgentStationary() => GetAgentSpeed() < /*epsilon=*/ 0.001f;
+    private bool IsAgentStationary() => GetAgentSpeed() < /*epsilon=*/ 0.0001f;
 
 
     /// Check if agent has landed defined as being upright, stationary and colliding.
