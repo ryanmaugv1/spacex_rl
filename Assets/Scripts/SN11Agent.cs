@@ -67,6 +67,8 @@ public class SN11Agent : Agent
     private Rigidbody AgentRigidbody;
     /// Current amount of thrust produced by agent in Newtons.
     private float AgentThrust;
+    /// Whether agent can apply thrust force to agent.
+    private bool canApplyThrust = true;
     /// Holds minimal agent collision info needed.
     private CollisionInfo AgentCollisionInfo = new CollisionInfo();
     /// Holds current episode time remaining till timeout in seconds.
@@ -204,6 +206,9 @@ public class SN11Agent : Agent
         
         // Increment iteration counter (support multi-agent env by incrementing text value).
         InterationCounter.text = (int.Parse(InterationCounter.text) + 1).ToString();
+        
+        // Reset state for thrust control.
+        canApplyThrust = true;
 
         // Initialise agent.
         SetAgentYPosition();
@@ -260,7 +265,8 @@ public class SN11Agent : Agent
         // Clamp control signals values to expected range to prevent unrealistic values or behaviour.
         xThrustVecControlSignal = Mathf.Clamp(xThrustVecControlSignal, -MaxThrusterGimbal.x, MaxThrusterGimbal.x);
         zThrustVecControlSignal = Mathf.Clamp(zThrustVecControlSignal, -MaxThrusterGimbal.z, MaxThrusterGimbal.z);
-        thrustControlSignal     = Mathf.Clamp(thrustControlSignal, 0f, MaxThrustForce);
+        thrustControlSignal = canApplyThrust ? Mathf.Clamp(thrustControlSignal, 0f, MaxThrustForce) : 0f;
+        
 
         // TODO: Show control signals in UI.
         // TODO: Find best way to scale Thrust VFX size based on thruster force.
@@ -324,8 +330,10 @@ public class SN11Agent : Agent
 
         // Set thrust force if W, A, S, D or SPACE is pressed.
         float thrustForce = 0f;
-        if (IsWASDKeyDown() || Input.GetKey(KeyCode.Space))
+        if (IsWASDKeyDown() && canApplyThrust)
             thrustForce = 6000f;
+        if (Input.GetKey(KeyCode.Space) && canApplyThrust)
+            thrustForce = 12000f;
         
         // Populate continuous action buffer with actions derived from input.
         var continuousActionsOut = actionsBuffers.ContinuousActions;
@@ -349,6 +357,11 @@ public class SN11Agent : Agent
         // Penalty given to agent when landing or crashing off pad.
         if (collision.gameObject.CompareTag("Landing Pad"))
             AddReward(StateRewardMap.LANDED_OR_CRASHED_OFF_PAD_PENALTY);
+        
+        // TODO: Penalty and end episode on collision that is too high in terms of valocity.
+        
+        // Disable ability to apply thrust control on collision.
+        canApplyThrust = false;
     }
 
 
