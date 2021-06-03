@@ -19,7 +19,7 @@ namespace Utility
         private void Start() {
             // Hide and confines cursor to center of game window.
             Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.lockState = CursorLockMode.Confined;
 
             // Locally offset camera position within anchor.
             transform.localPosition = CameraOffset;
