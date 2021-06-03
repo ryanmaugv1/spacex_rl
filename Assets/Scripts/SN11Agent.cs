@@ -437,8 +437,9 @@ public class SN11Agent : Agent
 
     /// Return agent distance from ground below in metres (else -1 if no ground below).
     private float GetAgentDistanceFromGround() {
+        LayerMask layerMask = LayerMask.GetMask("Agent");
         Vector3 rayOriginPosition = transform.position + new Vector3(0f, 0.1f, 0f);
-        if (Physics.Raycast(rayOriginPosition, Vector3.down, out var hit, Mathf.Infinity))
+        if (Physics.Raycast(rayOriginPosition, Vector3.down, out var hit, Mathf.Infinity, ~layerMask))
             return hit.distance;
         return -1;
     }
