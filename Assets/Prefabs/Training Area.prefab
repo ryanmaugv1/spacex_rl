@@ -99,8 +99,8 @@ MonoBehaviour:
   Target: {fileID: 7145493893803909305}
   CameraAnchor: {fileID: 3084843994061359339}
   AnchorOffset: {x: 0, y: 6, z: 0}
-  CameraOffset: {x: 0, y: 0, z: -50}
-  OrbitSpeed: 150
+  CameraOffset: {x: 0, y: 0, z: -75}
+  OrbitSpeed: 50
 --- !u!1 &7251742817781819538
 GameObject:
   m_ObjectHideFlags: 0
@@ -149,7 +149,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3084843994061359339
 Transform:
   m_ObjectHideFlags: 0
@@ -307,7 +307,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1108501340850132248, guid: 63f3d369990386547922d13a6d32f61f, type: 3}
       propertyPath: MaxInitPosition.y
-      value: 1500
+      value: 2500
       objectReference: {fileID: 0}
     - target: {fileID: 1108501340850132248, guid: 63f3d369990386547922d13a6d32f61f, type: 3}
       propertyPath: MaxInitPosition.z
@@ -319,7 +319,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1108501340850132248, guid: 63f3d369990386547922d13a6d32f61f, type: 3}
       propertyPath: MinInitPosition.y
-      value: 1000
+      value: 2000
       objectReference: {fileID: 0}
     - target: {fileID: 1108501340850132248, guid: 63f3d369990386547922d13a6d32f61f, type: 3}
       propertyPath: MinInitPosition.z
@@ -329,6 +329,18 @@ PrefabInstance:
       propertyPath: ThrustVFXTransform
       value: 
       objectReference: {fileID: 4656386432082974324}
+    - target: {fileID: 1108501340850132248, guid: 63f3d369990386547922d13a6d32f61f, type: 3}
+      propertyPath: OutOfRangeDistance.x
+      value: 5000
+      objectReference: {fileID: 0}
+    - target: {fileID: 1108501340850132248, guid: 63f3d369990386547922d13a6d32f61f, type: 3}
+      propertyPath: OutOfRangeDistance.y
+      value: 5000
+      objectReference: {fileID: 0}
+    - target: {fileID: 1108501340850132248, guid: 63f3d369990386547922d13a6d32f61f, type: 3}
+      propertyPath: OutOfRangeDistance.z
+      value: 5000
+      objectReference: {fileID: 0}
     - target: {fileID: 1261189081896033840, guid: 63f3d369990386547922d13a6d32f61f, type: 3}
       propertyPath: m_Mass
       value: 420
@@ -343,7 +355,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1261189081896033840, guid: 63f3d369990386547922d13a6d32f61f, type: 3}
       propertyPath: m_CollisionDetection
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2423617418579911364, guid: 63f3d369990386547922d13a6d32f61f, type: 3}
       propertyPath: m_BehaviorName
@@ -379,7 +391,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3622396644923834745, guid: 63f3d369990386547922d13a6d32f61f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.09
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3622396644923834745, guid: 63f3d369990386547922d13a6d32f61f, type: 3}
       propertyPath: m_LocalPosition.z
@@ -416,6 +428,10 @@ PrefabInstance:
     - target: {fileID: 4111370994498722755, guid: 63f3d369990386547922d13a6d32f61f, type: 3}
       propertyPath: m_Name
       value: Agent (SN-11)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4111370994498722755, guid: 63f3d369990386547922d13a6d32f61f, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 63f3d369990386547922d13a6d32f61f, type: 3}
