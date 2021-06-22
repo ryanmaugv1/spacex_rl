@@ -1,10 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using TMPro;
 using UnityEngine;
 using Unity.MLAgents;
 using Unity.MLAgents.Sensors;
 using Unity.MLAgents.Actuators;
+using Random = UnityEngine.Random;
 
 /**
  *  SpaceX's SN-11 Starship Rocket Agent
@@ -589,8 +589,35 @@ public class SN11Agent : Agent
 
 
     /// Returns true if W, A, S, or D key is currently being held down.    
-    private static bool IsWASDKeyDown() {
-        return Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D);
+    private static bool IsWASDKeyDown() =>
+        Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D);
+    
+    
+    /// Checks if any axis in `x` is less than `y`.
+    private bool CheckPerAxisLT_V3(Vector3 x, Vector3 y) => x.x < y.x || x.y < y.y || x.z < y.z;
+    
+    
+    /// Checks if any axis in `x` is greater than `y`.
+    private bool CheckPerAxisGT_V3(Vector3 x, Vector3 y) => x.x > y.x || x.y > y.y || x.z > y.z;
+
+
+    /// Normalizes float to value between given lower and upper bound.
+    private float NormalizeFloat(
+        float x, float min, float max, float lowerBound = -1f, float upperBound = 1f) => 
+        (upperBound - lowerBound) * ((x - min) / (max - min)) + lowerBound;
+
+    
+    /// Denormalizes float to value between given min and max when min is positive.
+    /// Note: `min` should always be positive for this to work.
+    private float DenormalizeFloat(float x, float min, float max) => x * (max - min) + min;
+
+    
+    /// Denormalize float to value between given min and max when min is negative.
+    /// Note: `min` should always be negative for this to work.
+    private float DenormalizeFloatNeg(float x, float min, float max) {
+        if (min > 0) 
+            throw new Exception("Min parameter must be negative.");
+        return x * (max - min) / 2;
     }
 
     #endregion
