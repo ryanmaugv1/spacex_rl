@@ -458,8 +458,8 @@ public class SN11Agent : Agent
 
 
     /// Return agent thrust vector orientation (x, z respectively).
-    private Vector2 GetAgentThrustVectorOrientation() {
-        return new Vector2(ThrustVector.localEulerAngles.x, ThrustVector.localEulerAngles.z);
+    private Vector3 GetAgentThrustVectorOrientation() {
+        return new Vector3(ThrustVector.localEulerAngles.x, 0f, ThrustVector.localEulerAngles.z);
     }
 
     
