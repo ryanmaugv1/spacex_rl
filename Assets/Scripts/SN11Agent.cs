@@ -258,15 +258,15 @@ public class SN11Agent : Agent
      */
     public override void OnActionReceived(ActionBuffers actionBuffers) {
         // Get respective control signals from agent action buffers.
-        float xThrustVecControlSignal = actionBuffers.ContinuousActions[0];
-        float zThrustVecControlSignal = actionBuffers.ContinuousActions[1];
-        float thrustControlSignal     = actionBuffers.ContinuousActions[2];
+        float xThrustVecControlSignal = 
+            DenormalizeFloatNeg(actionBuffers.ContinuousActions[0], -MaxThrusterGimbal.x, MaxThrusterGimbal.x);
+        float zThrustVecControlSignal = 
+            DenormalizeFloatNeg(actionBuffers.ContinuousActions[1], -MaxThrusterGimbal.z, MaxThrusterGimbal.z);
+        float thrustControlSignal = 
+            DenormalizeFloat(actionBuffers.ContinuousActions[2], 0f, MaxThrustForce);
 
-        // Clamp control signals values to expected range to prevent unrealistic values or behaviour.
-        xThrustVecControlSignal = Mathf.Clamp(xThrustVecControlSignal, -MaxThrusterGimbal.x, MaxThrusterGimbal.x);
-        zThrustVecControlSignal = Mathf.Clamp(zThrustVecControlSignal, -MaxThrusterGimbal.z, MaxThrusterGimbal.z);
-        thrustControlSignal = canApplyThrust ? Mathf.Clamp(thrustControlSignal, 0f, MaxThrustForce) : 0f;
-        
+        // Set thrust to 0f if thrust can be applied.
+        thrustControlSignal = canApplyThrust ? thrustControlSignal : 0f;
 
         // TODO: Show control signals in UI.
         // TODO: Find best way to scale Thrust VFX size based on thruster force.
@@ -337,9 +337,9 @@ public class SN11Agent : Agent
         
         // Populate continuous action buffer with actions derived from input.
         var continuousActionsOut = actionsBuffers.ContinuousActions;
-        continuousActionsOut[0]  = thrustVectorRotationX;
-        continuousActionsOut[1]  = thrustVectorRotationZ;
-        continuousActionsOut[2]  = thrustForce;
+        continuousActionsOut[0] = NormalizeFloat(thrustVectorRotationX, -MaxThrusterGimbal.x, MaxThrusterGimbal.x);
+        continuousActionsOut[1] = NormalizeFloat(thrustVectorRotationZ, -MaxThrusterGimbal.z, MaxThrusterGimbal.z);
+        continuousActionsOut[2] = NormalizeFloat(thrustForce, 0f, MaxThrustForce, 0f);
     }
 
 
