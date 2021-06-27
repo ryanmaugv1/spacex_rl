@@ -62,6 +62,8 @@ public class SN11Agent : Agent
     public float MaxApproachDistance = 25f;
     /// Minimum height which is considered as the "approach" height.
     public float MinApproachDistance = 5f;
+    /// Distance from the ground in metres before the agent should start being in upright orientation.
+    public float DistanceFromGroundBeforeUpright = 1000f;
 
     /// Rigidbody Component belonging to agent (used for applying actions).
     private Rigidbody AgentRigidbody;
@@ -135,11 +137,11 @@ public class SN11Agent : Agent
         float agentDistanceFromGround = GetAgentDistanceFromGround();
 
         // Reward agent for being in upright position when 100 metres or less from ground.
-        if (IsAgentInUprightWithinRange() && agentDistanceFromGround < 500f)
+        if (IsAgentInUprightWithinRange() && agentDistanceFromGround < DistanceFromGroundBeforeUpright)
             AddReward(StateRewardMap.UPRIGHT_POSITION_REWARD);
 
         // Reward agent for being in belly flop position when 100 metres or less from ground.
-        if (IsAgentInBellyFlopOrientation() && agentDistanceFromGround > 500f) {
+        if (IsAgentInBellyFlopOrientation() && agentDistanceFromGround > DistanceFromGroundBeforeUpright) {
             AddReward(StateRewardMap.BELLY_FLOP_POSITION_REWARD);
         }
 
@@ -149,6 +151,8 @@ public class SN11Agent : Agent
             && agentDistanceFromGround < MaxApproachDistance) {
             AddReward(StateRewardMap.APPROACHING_SPEED_REWARD);
         }
+        
+        // TODO: Reward agent for reducing angular velocity.
 
         if (HasAgentLandedOnPad()) {
             Debug.Log("End Episode - Landed On Pad!");
@@ -257,6 +261,13 @@ public class SN11Agent : Agent
      *      - Thrust force output (Newtons).
      */
     public override void OnActionReceived(ActionBuffers actionBuffers) {
+        if (DebugLogMode) {
+            Debug.Log("======= PRE-NORMALISATION CONTROL SIGNALS =======");
+            Debug.Log("Thrust X Control Signal: " + actionBuffers.ContinuousActions[0]);
+            Debug.Log("Thrust Z Control Signal: " + actionBuffers.ContinuousActions[1]);
+            Debug.Log("Thrust Control Signal: "   + actionBuffers.ContinuousActions[2]);
+        }
+        
         // Get respective control signals from agent action buffers.
         float xThrustVecControlSignal = 
             DenormalizeFloatNeg(actionBuffers.ContinuousActions[0], -MaxThrusterGimbal.x, MaxThrusterGimbal.x);
@@ -280,6 +291,7 @@ public class SN11Agent : Agent
         }
 
         if (DebugLogMode) {
+            Debug.Log("======= POST NORMALISATION CONTROL SIGNALS =======");
             Debug.Log("Thrust X Control Signal: " + xThrustVecControlSignal);
             Debug.Log("Thrust Z Control Signal: " + zThrustVecControlSignal);
             Debug.Log("Thrust Control Signal: "   + thrustControlSignal);
