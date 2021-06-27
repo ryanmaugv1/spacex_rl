@@ -18,64 +18,64 @@ using Random = UnityEngine.Random;
 public class SN11Agent : Agent
 {
     [Header("Environment Properties")]
-    /// Enable debug logs in console of agent data.
+    /* Enable debug logs in console of agent data. */
     public bool DebugLogMode;
-    /// Enable debug gizmos for agent.
+    /* Enable debug gizmos for agent. */
     public bool DebugVisualMode;
-    /// Time in seconds before we timeout episode because agent took too long to complete episode.
+    /* Time in seconds before we timeout episode because agent took too long to complete episode. */
     public int EpisodeTimeout = 120;
-    /// Defines out-of-range distance (both direction) for each rocket axis relative to landing pad.
+    /* Defines out-of-range distance (both direction) for each rocket axis relative to landing pad. */
     public Vector3 OutOfRangeDistance = new Vector3(10000f, 10000f, 10000f);
-    /// Landing pad transform used for relative positioning of rocket and reward calculation.
+    /* Landing pad transform used for relative positioning of rocket and reward calculation. */
     public Transform LandingPad;
-    /// Iteration counter label we want to update with step count.
+    /* Iteration counter label we want to update with step count. */
     public TMP_Text InterationCounter;
 
     [Header("Agent Thruster Properties")]
-    /// Agent thruster transform used for applying force at position for rocket.
+    /* Agent thruster transform used for applying force at position for rocket. */
     public Transform ThrustVector;
-    /// Agent thruster particle system (VFX).
+    /* Agent thruster particle system (VFX). */
     public ParticleSystem ThrustVFX;
 
     public Transform ThrustVFXTransform;
-    /// Maximum thrust force (Newtons) that can be outputted by from thruster.
+    /* Maximum thrust force (Newtons) that can be outputted by from thruster. */
     public float MaxThrustForce = 12000f;
-    /// Maximum thruster gimbal in any direction e.g. (30f, 0f, 30f) or (-30f, 0f, -30f).
+    /* Maximum thruster gimbal in any direction e.g. (30f, 0f, 30f) or (-30f, 0f, -30f). */
     public Vector3 MaxThrusterGimbal = new Vector3(30f, 0f, 30f);
 
     [Header("Agent Initalisation Properties")]
-    /// Minimum positional value agent can be initialised at.
+    /* Minimum positional value agent can be initialised at. */
     public Vector3 MinInitPosition = new Vector3(-100f, 1000f, -100f);
-    /// Maximum positional value agent can be initialised at.
+    /* Maximum positional value agent can be initialised at. */
     public Vector3 MaxInitPosition = new Vector3(100f, 2000f, 100f);
 
     [Header("Agent Reward Properties")]
-    /// Max distance agent can land or crash at and get a reward (proportionate to distance).
+    /* Max distance agent can land or crash at and get a reward (proportionate to distance). */
     public float MaxDistanceFromPad = 20f;
-    /// Belly flop Pitch (z-axis) range agent can be within to get a reward.
+    /* Belly flop Pitch (z-axis) range agent can be within to get a reward. */
     public Vector2 BellyFlopPitchRange = new Vector2(85f, 95f);
-    /// Upright Pitch (z-axis) and Yaw (x-axis) range (-range, 0, range) agent can be within to get a reward.
+    /* Upright Pitch (z-axis) and Yaw (x-axis) range (-range, 0, range) agent can be within to get a reward. */
     public float UprightOrientationRange = 5f;
-    /// Maximum approach speed agent can have to get a reward.
+    /* Maximum approach speed agent can have to get a reward. */
     public float MaxApproachSpeed = 4f;
-    /// Maximum height which is considered as the "approach" height.
+    /* Maximum height which is considered as the "approach" height. */
     public float MaxApproachDistance = 25f;
-    /// Minimum height which is considered as the "approach" height.
+    /* Minimum height which is considered as the "approach" height. */
     public float MinApproachDistance = 5f;
-    /// Distance from the ground in metres before the agent should start being in upright orientation.
+    /* Distance from the ground in metres before the agent should start being in upright orientation. */
     public float DistanceFromGroundBeforeUpright = 1000f;
 
-    /// Rigidbody Component belonging to agent (used for applying actions).
+    /* Rigidbody Component belonging to agent (used for applying actions). */
     private Rigidbody AgentRigidbody;
-    /// Current amount of thrust produced by agent in Newtons.
+    /* Current amount of thrust produced by agent in Newtons. */
     private float AgentThrust;
-    /// Whether agent can apply thrust force to agent.
+    /* Whether agent can apply thrust force to agent. */
     private bool canApplyThrust = true;
-    /// Holds minimal agent collision info needed.
+    /* Holds minimal agent collision info needed. */
     private CollisionInfo AgentCollisionInfo = new CollisionInfo();
-    /// Holds current episode time remaining till timeout in seconds.
+    /* Holds current episode time remaining till timeout in seconds. */
     private float EpisodeTimeRemaining;
-    /// Mapping from agent states to respective reward.
+    /* Mapping from agent states to respective reward. */
     private StateRewardMap StateRewardMap;
     
 
@@ -235,10 +235,10 @@ public class SN11Agent : Agent
      *      - Agent distance to the ground (metres).
      *      - Agent distance to landing pad (x, y, z).
      *      - Agent angular velocity (x, y, z).
-     *      - Agent thrust vector orientation (x, z).
+     *      - Agent thrust vector orientation (x, y, z).
      *      - Agent thrust force being applied (Newtons).
      *
-     *  We collect a total of 16 observations to train our agent with.
+     *  We collect a total of 17 observations to train our agent with.
      */
     public override void CollectObservations(VectorSensor sensor) {
         sensor.AddObservation(GetAgentOrientation());
@@ -619,13 +619,19 @@ public class SN11Agent : Agent
         (upperBound - lowerBound) * ((x - min) / (max - min)) + lowerBound;
 
     
-    /// Denormalizes float to value between given min and max when min is positive.
-    /// Note: `min` should always be positive for this to work.
+    /**
+     * Denormalizes float to value between given min and max when min is positive.
+     *
+     * Note: `min` should always be positive for this to work. 
+    */
     private float DenormalizeFloat(float x, float min, float max) => x * (max - min) + min;
 
     
-    /// Denormalize float to value between given min and max when min is negative.
-    /// Note: `min` should always be negative for this to work.
+    /**
+     * Denormalize float to value between given min and max when min is negative.
+     *
+     * Note: `min` should always be negative for this to work.
+     */
     private float DenormalizeFloatNeg(float x, float min, float max) {
         if (min > 0) 
             throw new Exception("Min parameter must be negative.");
